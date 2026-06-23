@@ -1,0 +1,3587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SideQuest — Technical Help, On Demand</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.10.3/umd/Recharts.min.js">
+    </script>
+    <style>
+        :root {
+            --bg: #F0F2F8;
+            --card: #FFFFFF;
+            --primary: #4338CA;
+            --primary-light: #EEF2FF;
+            --accent: #7C3AED;
+            --sidebar: #0F172A;
+            --sidebar-hover: #1E293B;
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --destructive: #DC2626;
+            --destructive-light: #FEE2E2;
+            --radius: 0.75rem;
+            --radius-sm: 0.5rem;
+            --radius-lg: 1rem;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --transition: 200ms ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        button {
+            cursor: pointer;
+            font-family: var(--font-body);
+            border: none;
+            outline: none;
+            transition: all var(--transition);
+        }
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        input,
+        textarea,
+        select {
+            font-family: var(--font-body);
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        /* ========== UTILITY CLASSES ========== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        .btn-ghost:hover {
+            background: #f1f5f9;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #059669, #10B981);
+            color: #fff;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-radius: var(--radius-sm);
+        }
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: var(--radius-lg);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .badge-green {
+            background: var(--success-light);
+            color: #065F46;
+        }
+        .badge-red {
+            background: var(--destructive-light);
+            color: #991B1B;
+        }
+        .badge-amber {
+            background: var(--warning-light);
+            color: #92400E;
+        }
+        .badge-indigo {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .card-hover:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            transition: all var(--transition);
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: #F1F5F9;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+        }
+        .chip.selected {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+        .chip-sm {
+            padding: 0.2rem 0.6rem;
+            font-size: 0.7rem;
+        }
+        .pulsing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3);
+            }
+        }
+        .dot-green {
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+        .dot-red {
+            background: var(--destructive);
+            box-shadow: 0 0 6px var(--destructive);
+        }
+        .dot-indigo {
+            background: var(--primary);
+            box-shadow: 0 0 6px var(--primary);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #1E293B, #4338CA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .page.active.flex-page {
+            display: flex;
+        }
+
+        /* ========== DEMO NAVIGATOR ========== */
+        #demo-nav {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            background: #1E293B;
+            color: #fff;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-xl);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        #demo-nav button {
+            background: transparent;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.6rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        #demo-nav button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        #demo-nav button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+        #demo-nav .page-indicator {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.35rem 0.8rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            position: relative;
+            white-space: nowrap;
+        }
+        #demo-nav .page-indicator:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #page-dropdown {
+            display: none;
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1E293B;
+            border-radius: var(--radius);
+            padding: 0.5rem 0;
+            min-width: 260px;
+            max-height: 350px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            z-index: 10000;
+        }
+        #page-dropdown.open {
+            display: block;
+        }
+        #page-dropdown .dropdown-row {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #CBD5E1;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+        #page-dropdown .dropdown-row:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        #page-dropdown .dropdown-row.active-row {
+            background: rgba(99, 102, 241, 0.3);
+            color: #A5B4FC;
+            font-weight: 600;
+        }
+        .dropdown-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            background: transparent;
+        }
+        .dropdown-backdrop.open {
+            display: block;
+        }
+
+        /* ========== TOASTS ========== */
+        .toast-stack {
+            position: fixed;
+            right: 1rem;
+            bottom: 5rem;
+            z-index: 10050;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            pointer-events: none;
+        }
+        .toast {
+            min-width: 240px;
+            max-width: 360px;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius);
+            background: rgba(15, 23, 42, 0.95);
+            color: #fff;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.85rem;
+            transform: translateY(8px);
+            opacity: 0;
+            animation: toast-in 180ms ease forwards;
+        }
+        .toast.success {
+            background: rgba(6, 95, 70, 0.96);
+        }
+        .toast.warning {
+            background: rgba(120, 53, 15, 0.96);
+        }
+        @keyframes toast-in {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========== SIDEBAR LAYOUT ========== */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 256px;
+            min-width: 256px;
+            background: var(--sidebar);
+            color: #CBD5E1;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            transition: all var(--transition);
+        }
+        .sidebar-logo {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .sidebar-logo .zap-icon {
+            color: #A5B4FC;
+            font-size: 1.3rem;
+        }
+        .sidebar-availability {
+            margin: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.65rem 0.85rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #94A3B8;
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .sidebar-nav a:hover {
+            background: var(--sidebar-hover);
+            color: #E2E8F0;
+        }
+        .sidebar-nav a.active-nav {
+            background: rgba(99, 102, 241, 0.2);
+            color: #A5B4FC;
+            border-left: 3px solid #818CF8;
+            font-weight: 600;
+        }
+        .sidebar-footer {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .sidebar-footer .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .sidebar-footer .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .sidebar-footer .user-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #E2E8F0;
+        }
+        .sidebar-footer .user-title {
+            font-size: 0.7rem;
+            color: #94A3B8;
+        }
+        .main-content {
+            flex: 1;
+            margin-left: 256px;
+            min-height: 100vh;
+        }
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: #fff;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 2rem;
+            border-bottom: 1px solid var(--border);
+            gap: 1rem;
+        }
+        .topbar .notif-bell {
+            position: relative;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 50%;
+            transition: all var(--transition);
+        }
+        .topbar .notif-bell:hover {
+            background: #F1F5F9;
+        }
+        .topbar .notif-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--destructive);
+        }
+        .page-content {
+            padding: 2rem;
+        }
+
+        /* ========== LANDING PAGE ========== */
+        .landing-page {
+            background: #0F172A;
+            color: #E2E8F0;
+            min-height: 100vh;
+        }
+        .landing-nav {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.75rem 0;
+        }
+        .landing-nav .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .landing-nav .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .landing-nav .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #94A3B8;
+        }
+        .landing-nav .nav-links a:hover {
+            color: #fff;
+        }
+        .landing-hero {
+            text-align: center;
+            padding: 5rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .landing-hero .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #A5B4FC;
+            margin-bottom: 1.5rem;
+        }
+        .landing-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+            line-height: 1.15;
+        }
+        .landing-hero .hero-sub {
+            font-size: 1.15rem;
+            color: #94A3B8;
+            margin-bottom: 2rem;
+        }
+        .landing-hero .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        .landing-hero .hero-ctas .btn {
+            font-size: 1rem;
+            padding: 0.85rem 2rem;
+            border-radius: 9999px;
+        }
+        .hero-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+            pointer-events: none;
+        }
+        .hero-glow.g1 {
+            width: 500px;
+            height: 500px;
+            background: #4338CA;
+            top: -150px;
+            left: -100px;
+        }
+        .hero-glow.g2 {
+            width: 400px;
+            height: 400px;
+            background: #7C3AED;
+            bottom: -100px;
+            right: -80px;
+        }
+        .social-proof {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            padding: 0 2rem 3rem;
+        }
+        .social-proof .stat {
+            text-align: center;
+        }
+        .social-proof .stat-val {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .social-proof .stat-label {
+            font-size: 0.85rem;
+            color: #94A3B8;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #818CF8;
+            margin-bottom: 0.5rem;
+        }
+        .landing-section {
+            padding: 4rem 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .landing-section h2 {
+            font-size: 2.25rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            text-align: center;
+        }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+        @media (max-width: 900px) {
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .step-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all var(--transition);
+        }
+        .step-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .step-card .step-num {
+            font-family: var(--font-mono);
+            font-size: 3rem;
+            font-weight: 700;
+            color: rgba(129, 140, 248, 0.3);
+            margin-bottom: 0.5rem;
+        }
+        .step-card h4 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .step-card p {
+            color: #94A3B8;
+            font-size: 0.85rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+        @media (max-width: 700px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .feature-tile {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .feature-tile .ft-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .feature-tile h4 {
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+        .feature-tile p {
+            color: #94A3B8;
+            font-size: 0.85rem;
+        }
+        .benefits-section {
+            background: #0B1120;
+            padding: 4rem 2rem;
+        }
+        .benefits-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        @media (max-width: 700px) {
+            .benefits-inner {
+                grid-template-columns: 1fr;
+            }
+        }
+        .benefit-col {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .benefit-col h3 {
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+        .benefit-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+        .benefit-col ul li {
+            color: #CBD5E1;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .benefit-col ul li::before {
+            content: '✓';
+            color: #10B981;
+            font-weight: 700;
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        @media (max-width: 800px) {
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+        }
+        .testimonial-card .stars {
+            color: #F59E0B;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .testimonial-card .quote {
+            color: #CBD5E1;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .testimonial-card .author-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #fff;
+        }
+        .faq-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .faq-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .faq-card .faq-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .faq-card h4 {
+            color: #fff;
+            font-size: 1rem;
+        }
+        .faq-card .chevron {
+            color: #94A3B8;
+            flex-shrink: 0;
+        }
+        .faq-card .faq-answer {
+            display: none;
+            color: #CBD5E1;
+            font-size: 0.9rem;
+        }
+        .faq-card.open .faq-answer {
+            display: block;
+        }
+        .landing-cta-final {
+            text-align: center;
+            padding: 5rem 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .landing-cta-final h2 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+        .landing-cta-final p {
+            color: #94A3B8;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        .landing-footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            color: #64748B;
+            font-size: 0.85rem;
+        }
+        .landing-footer a {
+            color: #94A3B8;
+            margin: 0 0.5rem;
+        }
+        .landing-footer a:hover {
+            color: #fff;
+        }
+
+        /* ========== SIGN UP PAGE ========== */
+        .signup-page {
+            display: flex;
+            min-height: 100vh;
+        }
+        @media (max-width: 768px) {
+            .signup-page {
+                flex-direction: column;
+            }
+        }
+        .signup-left {
+            flex: 1;
+            background: linear-gradient(135deg, #0F172A, #1E1B4B);
+            color: #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem;
+            gap: 2rem;
+        }
+        .signup-left .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.35rem 0.9rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #A5B4FC;
+            width: fit-content;
+        }
+        .signup-left h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .signup-left .stats-row {
+            display: flex;
+            gap: 2rem;
+        }
+        .signup-left .stat-item {
+            text-align: center;
+        }
+        .signup-left .stat-item .sv {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .signup-left .stat-item .sl {
+            font-size: 0.75rem;
+            color: #94A3B8;
+        }
+        .signup-right {
+            flex: 1;
+            background: #F8FAFC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .signup-form-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: var(--shadow-lg);
+        }
+        .mode-toggle {
+            display: flex;
+            background: #F1F5F9;
+            border-radius: 9999px;
+            padding: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .mode-toggle button {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        .mode-toggle button.active-mode {
+            background: #fff;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .signup-form-card h2 {
+            margin-bottom: 0.25rem;
+        }
+        .signup-form-card .form-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+        .social-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.65rem;
+            border-radius: var(--radius);
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .social-btn:hover {
+            background: #F8FAFC;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 1.25rem;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.35rem;
+            color: var(--text-primary);
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            background: #fff;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1);
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 2.5rem;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* ========== ROLE SELECTION ========== */
+        .role-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0F172A, #1E1B4B);
+            color: #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .role-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .role-header .step-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #818CF8;
+        }
+        .role-header h2 {
+            font-size: 2rem;
+            color: #fff;
+            margin: 0.5rem 0;
+        }
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            max-width: 900px;
+            width: 100%;
+        }
+        @media (max-width: 750px) {
+            .role-cards {
+                grid-template-columns: 1fr;
+                max-width: 380px;
+            }
+        }
+        .role-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.5rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+            text-align: center;
+        }
+        .role-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .role-card.selected {
+            border-color: #818CF8;
+            background: rgba(99, 102, 241, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+        }
+        .role-card .checkmark {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #818CF8;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            opacity: 0;
+            transition: all var(--transition);
+        }
+        .role-card.selected .checkmark {
+            opacity: 1;
+        }
+        .role-card .recommended-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #7C3AED, #6366F1);
+            color: #fff;
+            padding: 0.25rem 0.9rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+        .role-card .role-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+        .role-card h3 {
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        .role-card .role-subtitle {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .role-card p {
+            font-size: 0.85rem;
+            color: #94A3B8;
+            margin-bottom: 1rem;
+        }
+        .role-card ul {
+            list-style: none;
+            text-align: left;
+            font-size: 0.8rem;
+            color: #CBD5E1;
+        }
+        .role-card ul li {
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .role-card ul li::before {
+            content: '✓';
+            color: #10B981;
+            font-weight: 700;
+        }
+        .role-continue {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        .role-continue button {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+        }
+
+        /* ========== SETUP PAGES ========== */
+        .setup-page {
+            display: flex;
+            min-height: 100vh;
+            background: var(--bg);
+        }
+        .setup-sidebar {
+            width: 320px;
+            min-width: 320px;
+            background: linear-gradient(180deg, #0F172A, #1E1B4B);
+            color: #E2E8F0;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        @media (max-width: 800px) {
+            .setup-sidebar {
+                display: none;
+            }
+        }
+        .setup-sidebar .setup-logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .setup-sidebar .setup-progress-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #818CF8;
+            text-transform: uppercase;
+        }
+        .setup-steps {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .setup-steps li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .setup-steps li.done {
+            color: #10B981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .setup-steps li.active-step {
+            color: #A5B4FC;
+            background: rgba(99, 102, 241, 0.2);
+            font-weight: 600;
+        }
+        .setup-steps li.pending {
+            color: #64748B;
+        }
+        .setup-steps .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .setup-steps li.done .step-circle {
+            background: #10B981;
+            color: #fff;
+        }
+        .setup-steps li.active-step .step-circle {
+            background: #6366F1;
+            color: #fff;
+        }
+        .setup-steps li.pending .step-circle {
+            background: #334155;
+            color: #94A3B8;
+        }
+        .pro-tip {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #A5B4FC;
+            margin-top: auto;
+        }
+        .setup-main {
+            flex: 1;
+            padding: 3rem;
+            overflow-y: auto;
+        }
+        .setup-main .step-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+        .setup-main h2 {
+            font-size: 1.75rem;
+            margin: 0.4rem 0 0.25rem;
+        }
+        .setup-main .setup-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        .photo-upload-area {
+            border: 2px dashed var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: #fff;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .photo-upload-area:hover {
+            background: var(--primary-light);
+        }
+        .title-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .skill-category-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        .skill-category-card h4 {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .skill-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .exp-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .exp-btn {
+            padding: 0.55rem 1rem;
+            border-radius: 9999px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .exp-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .pricing-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 500px) {
+            .pricing-row {
+                flex-direction: column;
+            }
+        }
+        .pricing-input {
+            flex: 1;
+            position: relative;
+        }
+        .pricing-input .prefix {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .pricing-input input {
+            padding-left: 1.8rem;
+        }
+        .avail-btns {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .avail-btn {
+            padding: 0.55rem 1rem;
+            border-radius: 9999px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .avail-btn.selected {
+            border-color: var(--success);
+            background: var(--success-light);
+            color: #065F46;
+            font-weight: 600;
+        }
+        .profile-strength-bar {
+            background: #E2E8F0;
+            border-radius: 9999px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .profile-strength-fill {
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #10B981, #6366F1);
+            transition: width 0.5s;
+        }
+        .verification-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ========== DASHBOARD ========== */
+        .greeting {
+            font-size: 1.75rem;
+            margin-bottom: 0.15rem;
+        }
+        .greeting-sub {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .avail-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            border-radius: 12px;
+            background: #CBD5E1;
+            position: relative;
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .toggle-switch.on {
+            background: var(--success);
+        }
+        .toggle-switch .toggle-knob {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        .toggle-switch.on .toggle-knob {
+            left: 22px;
+        }
+        .stats-row-dash {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 900px) {
+            .stats-row-dash {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 500px) {
+            .stats-row-dash {
+                grid-template-columns: 1fr;
+            }
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .stat-card .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        .stat-card .stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .stat-card .stat-label-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .stat-card .trend {
+            font-size: 0.75rem;
+            color: #059669;
+            font-weight: 600;
+        }
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 900px) {
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .task-card-mini {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            margin-bottom: 0.75rem;
+            transition: all var(--transition);
+        }
+        .task-card-mini:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .task-card-mini .urgency-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+        .urgency-urgent {
+            background: var(--destructive-light);
+            color: #991B1B;
+        }
+        .urgency-high {
+            background: var(--warning-light);
+            color: #92400E;
+        }
+        .urgency-normal {
+            background: var(--success-light);
+            color: #065F46;
+        }
+
+        /* ========== OPPORTUNITY NOTIFICATION ========== */
+        .countdown-banner {
+            background: #FFFBEB;
+            border: 1.5px solid #F59E0B;
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all var(--transition);
+        }
+        .countdown-banner.urgent-countdown {
+            background: #FEF2F2;
+            border-color: #DC2626;
+        }
+        .countdown-timer {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #92400E;
+        }
+        .countdown-timer.urgent-countdown {
+            color: #DC2626;
+        }
+        .countdown-progress {
+            height: 4px;
+            background: #FDE68A;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        .countdown-progress-fill {
+            height: 100%;
+            background: #F59E0B;
+            border-radius: 2px;
+            transition: width 1s linear;
+        }
+        .countdown-progress-fill.urgent-countdown {
+            background: #DC2626;
+        }
+
+        /* ========== CHAT ========== */
+        .chat-panel {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .chat-bubble {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .chat-bubble.worker {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #4338CA, #6366F1);
+            color: #fff;
+            border-radius: 1rem 1rem 0.25rem 1rem;
+        }
+        .chat-bubble.client {
+            align-self: flex-start;
+            background: #F8FAFC;
+            color: var(--text-primary);
+            border-radius: 1rem 1rem 1rem 0.25rem;
+            border: 1px solid var(--border);
+        }
+        .chat-input-bar {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--border);
+            align-items: center;
+            background: #F8FAFC;
+        }
+        .chat-input-bar input {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border-radius: 9999px;
+            border: 1.5px solid var(--border);
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        /* ========== PROGRESS PAGE ========== */
+        .progress-bar-wrap {
+            background: #E2E8F0;
+            border-radius: 9999px;
+            height: 10px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #4338CA, #7C3AED);
+            transition: width 0.5s;
+        }
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0;
+            cursor: pointer;
+        }
+        .milestone-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        .milestone-item.done label {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+        .timeline-step {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            position: relative;
+        }
+        .timeline-step .tl-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        .timeline-step .tl-icon.done {
+            background: #10B981;
+            color: #fff;
+        }
+        .timeline-step .tl-icon.active {
+            background: #6366F1;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+        }
+        .timeline-step .tl-icon.pending {
+            background: #E2E8F0;
+            color: #94A3B8;
+        }
+
+        /* ========== PAYMENT ========== */
+        .success-card {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .success-card .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .amount-display {
+            background: #D1FAE5;
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .amount-display .amount-value {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #065F46;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 0.9rem;
+        }
+        .payment-method-selector {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .payment-method-option {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition);
+            background: #fff;
+        }
+        .payment-method-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* ========== STAR RATING ========== */
+        .star-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .star-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #D1D5DB;
+            transition: all 0.1s;
+            padding: 0;
+            line-height: 1;
+        }
+        .star-btn.filled {
+            color: #F59E0B;
+        }
+        .star-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* ========== TABLE ========== */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .data-table th {
+            background: #F8FAFC;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #F1F5F9;
+            font-size: 0.85rem;
+        }
+        .data-table tbody tr:hover {
+            background: #F8FAFC;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.6rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            background: #fff;
+        }
+        .filter-bar select {
+            padding: 0.6rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            background: #fff;
+        }
+        .category-tabs {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .category-tab {
+            padding: 0.45rem 0.9rem;
+            border-radius: 9999px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .category-tab.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ========== EARNINGS CHART ========== */
+        .chart-container {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        .category-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
+        }
+        .category-bar .bar-fill {
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        .category-bar .bar-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+        .category-bar .bar-pct {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* ========== PUBLIC PROFILE ========== */
+        .profile-hero {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+        .profile-hero .profile-avatar-lg {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto 1rem;
+        }
+        .profile-stats-tiles {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            background: #F8FAFC;
+            border-radius: var(--radius);
+            padding: 1rem;
+        }
+        @media (max-width: 700px) {
+            .profile-stats-tiles {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .setup-main {
+                padding: 1.5rem;
+            }
+            .page-content {
+                padding: 1rem;
+            }
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-row-dash {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .landing-hero h1 {
+                font-size: 2.2rem;
+            }
+            .landing-nav .nav-links {
+                display: none;
+            }
+        }
+        @media (max-width: 500px) {
+            .stats-row-dash {
+                grid-template-columns: 1fr;
+            }
+            .landing-hero h1 {
+                font-size: 1.7rem;
+            }
+            .setup-sidebar {
+                display: none;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== PAGE 1: LANDING ==================== -->
+    <div class="page active" id="page-1">
+        <div class="landing-page">
+            <nav class="landing-nav">
+                <div class="nav-inner">
+                    <div class="nav-logo">⚡ SideQuest</div>
+                    <div class="nav-links">
+                        <a href="#how">How it works</a><a href="#benefits">Benefits</a><a href="#faq">FAQ</a>
+                    </div>
+                    <div style="display:flex;gap:0.75rem;align-items:center;">
+                        <a href="#" onclick="navigateTo(2)" style="color:#94A3B8;font-weight:500;font-size:0.85rem;">Sign In</a>
+                        <button class="btn btn-primary btn-sm" onclick="navigateTo(2)">Get Started →</button>
+                    </div>
+                </div>
+            </nav>
+            <section class="landing-hero">
+                <div class="hero-glow g1"></div><div class="hero-glow g2"></div>
+                <div class="hero-badge"><span class="pulsing-dot dot-green"></span> NOW LIVE IN INDIA</div>
+                <h1><span class="gradient-text">Technical Help,</span><br>On Demand</h1>
+                <p class="hero-sub">Connect with India's top freelance developers to tackle your technical tasks — fast, reliable, and secure.</p>
+                <div class="hero-ctas">
+                    <button class="btn btn-primary btn-lg" onclick="navigateTo(2)">Join as a Developer</button>
+                    <button class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.3);color:#fff;" onclick="navigateTo(2)">Post a Task</button>
+                </div>
+                <div class="social-proof">
+                    <div class="stat"><div class="stat-val">2,400+</div><div class="stat-label">Developers</div></div>
+                    <div class="stat"><div class="stat-val">15 min</div><div class="stat-label">Avg. Response</div></div>
+                    <div class="stat"><div class="stat-val">4.9★</div><div class="stat-label">Avg. Rating</div></div>
+                </div>
+            </section>
+            <div class="landing-section" id="how">
+                <div class="section-label">How SideQuest Works</div>
+                <h2>Get technical tasks done in 4 simple steps</h2>
+                <div class="steps-grid">
+                    <div class="step-card"><div class="step-num">01</div><h4>Post a Task</h4><p>Describe your technical challenge in detail. Set your budget and timeline.</p></div>
+                    <div class="step-card"><div class="step-num">02</div><h4>Developers Respond</h4><p>Verified developers review your task and submit proposals within minutes.</p></div>
+                    <div class="step-card"><div class="step-num">03</div><h4>Select & Collaborate</h4><p>Choose the best developer based on skills, ratings, and proposal quality.</p></div>
+                    <div class="step-card"><div class="step-num">04</div><h4>Approve & Pay</h4><p>Review the work, request changes if needed, and release payment when satisfied.</p></div>
+                </div>
+            </div>
+            <div class="landing-section">
+                <div class="section-label">Features</div>
+                <h2>Built for speed and trust</h2>
+                <div class="features-grid">
+                    <div class="feature-tile"><div class="ft-icon">⚡</div><div><h4>Instant Matching</h4><p>Our algorithm instantly notifies the best-matched developers for your task.</p></div></div>
+                    <div class="feature-tile"><div class="ft-icon">🛡️</div><div><h4>Verified Developers</h4><p>Every developer goes through identity and skill verification before joining.</p></div></div>
+                    <div class="feature-tile"><div class="ft-icon">⭐</div><div><h4>Rated & Trusted</h4><p>Transparent ratings and reviews help you choose with confidence.</p></div></div>
+                    <div class="feature-tile"><div class="ft-icon">🔒</div><div><h4>Secure Payments</h4><p>Payments are held in escrow and released only when you approve the work.</p></div></div>
+                </div>
+            </div>
+            <div class="benefits-section" id="benefits">
+                <div class="benefits-inner">
+                    <div class="benefit-col" style="border-top:3px solid #6366F1;">
+                        <div class="section-label" style="color:#818CF8;">For Developers</div>
+                        <h3>Earn on your terms</h3>
+                        <ul><li>Set your own hourly rate</li><li>Work remotely on flexible schedules</li><li>Build a verified professional profile</li><li>Get paid securely via UPI or Razorpay</li></ul>
+                        <button class="btn btn-primary btn-sm" onclick="navigateTo(2)">Join as Developer →</button>
+                    </div>
+                    <div class="benefit-col" style="border-top:3px solid #10B981;">
+                        <div class="section-label" style="color:#10B981;">For Businesses</div>
+                        <h3>Scale your team instantly</h3>
+                        <ul><li>Access 2,400+ skilled developers</li><li>Average 15-minute response time</li><li>Pay only for completed work</li><li>4.9★ average quality rating</li></ul>
+                        <button class="btn btn-success btn-sm" onclick="navigateTo(2)">Post a Task →</button>
+                    </div>
+                </div>
+            </div>
+            <div class="landing-section">
+                <h2>What our users say</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="quote">"SideQuest helped me find a React developer within 10 minutes. The checkout bug was fixed the same day. Incredible platform!"</p><div class="author"><div class="author-avatar">PM</div><div><strong style="color:#fff;">Priya Mehta</strong><br><small style="color:#94A3B8;">FinPay</small></div></div></div>
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="quote">"I've completed 60+ tasks on SideQuest. The consistent workflow and prompt payments make it my go-to freelancing platform."</p><div class="author"><div class="author-avatar">AS</div><div><strong style="color:#fff;">Arjun Sharma</strong><br><small style="color:#94A3B8;">Full Stack Developer</small></div></div></div>
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="quote">"The escrow payment system gives me peace of mind. I only release payment when I'm 100% satisfied with the work delivered."</p><div class="author"><div class="author-avatar">RG</div><div><strong style="color:#fff;">Rahul Gupta</strong><br><small style="color:#94A3B8;">Buildfast</small></div></div></div>
+                </div>
+            </div>
+            <div class="faq-section" id="faq">
+                <h2 style="text-align:center;color:#fff;margin-bottom:2rem;">Frequently Asked Questions</h2>
+                <div class="faq-card"><div class="faq-row"><h4>How quickly can I expect a developer to respond?</h4><span class="chevron">▸</span></div><div class="faq-answer"></div></div>
+                <div class="faq-card"><div class="faq-row"><h4>What payment methods are supported?</h4><span class="chevron">▸</span></div><div class="faq-answer"></div></div>
+                <div class="faq-card"><div class="faq-row"><h4>How are developers verified?</h4><span class="chevron">▸</span></div><div class="faq-answer"></div></div>
+                <div class="faq-card"><div class="faq-row"><h4>What if I'm not satisfied with the work?</h4><span class="chevron">▸</span></div><div class="faq-answer"></div></div>
+            </div>
+            <div class="landing-cta-final">
+                <h2>Ready to get started?</h2>
+                <p>Join 2,400+ developers already earning on SideQuest, or post your first technical task today.</p>
+                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                    <button class="btn btn-primary btn-lg" onclick="navigateTo(2)">Join as a Developer</button>
+                    <button class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.3);color:#fff;" onclick="navigateTo(2)">Post a Task</button>
+                </div>
+            </div>
+            <footer class="landing-footer">
+                ⚡ SideQuest © 2026 &nbsp;|&nbsp; <a href="#">Privacy</a> <a href="#">Terms</a> <a href="#">Support</a>
+            </footer>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 2: SIGN UP ==================== -->
+    <div class="page" id="page-2">
+        <div class="signup-page">
+            <div class="signup-left">
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:1.3rem;color:#fff;">⚡ SideQuest</div>
+                <div class="brand-badge"><span class="pulsing-dot dot-green"></span> 2,400+ DEVELOPERS ACTIVE</div>
+                <h1>Join India's fastest-growing<br>technical talent network</h1>
+                <p style="color:#94A3B8;">Connect with opportunities that match your skills and start earning on your terms.</p>
+                <div class="stats-row">
+                    <div class="stat-item"><div class="sv">15 min</div><div class="sl">Avg. match time</div></div>
+                    <div class="stat-item"><div class="sv">₹850</div><div class="sl">Avg. task pay</div></div>
+                    <div class="stat-item"><div class="sv">4.9★</div><div class="sl">Platform rating</div></div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);border-radius:var(--radius);padding:1.25rem;font-style:italic;color:#CBD5E1;">"SideQuest has transformed how I freelance. The steady stream of quality tasks and reliable payments are unmatched."<br><br><strong style="color:#fff;">— Arjun Sharma</strong>, Full Stack Developer</div>
+            </div>
+            <div class="signup-right">
+                <div class="signup-form-card" id="signup-form-card">
+                    <div class="mode-toggle">
+                        <button id="mode-signup" class="active-mode" onclick="setSignupMode('signup')">Create Account</button>
+                        <button id="mode-signin" onclick="setSignupMode('signin')">Sign In</button>
+                    </div>
+                    <h2 id="form-heading">Create your account</h2>
+                    <p class="form-subtitle" id="form-subtitle">Join 2,400+ developers already on SideQuest</p>
+                    <div class="social-btns">
+                        <button class="social-btn">🌐 Google</button>
+                        <button class="social-btn">🐙 GitHub</button>
+                    </div>
+                    <div class="divider">or continue with email</div>
+                    <div class="form-group" id="group-fullname"><label>Full Name</label><input type="text" placeholder="Arjun Sharma" id="input-fullname"></div>
+                    <div class="form-group"><label>Email</label><input type="email" placeholder="arjun@example.com" id="input-email"></div>
+                    <div class="form-group" id="group-phone"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210" id="input-phone"></div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-wrapper"><input type="password" placeholder="••••••••" id="input-password"><button class="password-toggle" onclick="togglePassword()">👁️</button></div>
+                    </div>
+                    <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" id="submit-btn" onclick="handleSignup()">Create Account →</button>
+                    <p style="text-align:center;font-size:0.75rem;color:var(--text-muted);margin-top:0.75rem;">By continuing, you agree to our <a href="#" style="color:var(--primary);">Terms</a> and <a href="#" style="color:var(--primary);">Privacy Policy</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 3: ROLE SELECTION ==================== -->
+    <div class="page" id="page-3">
+        <div class="role-page">
+            <div class="role-header">
+                <div class="step-label">STEP 1 OF 4</div>
+                <h2>How will you use SideQuest?</h2>
+                <p style="color:#94A3B8;">You can always change this later</p>
+            </div>
+            <div class="role-cards">
+                <div class="role-card" onclick="selectRole('client')" id="role-client">
+                    <div class="checkmark">✓</div>
+                    <div class="role-icon" style="background:rgba(16,185,129,0.2);color:#10B981;">💼</div>
+                    <h3>Client</h3>
+                    <p class="role-subtitle" style="color:#10B981;">Post tasks & hire talent</p>
+                    <p>Post technical tasks and get matched with skilled developers instantly.</p>
+                    <ul><li>Access 2,400+ developers</li><li>Secure escrow payments</li><li>15-min avg. response</li></ul>
+                </div>
+                <div class="role-card selected" onclick="selectRole('worker')" id="role-worker">
+                    <div class="recommended-badge">RECOMMENDED</div>
+                    <div class="checkmark">✓</div>
+                    <div class="role-icon" style="background:rgba(99,102,241,0.2);color:#818CF8;">👨‍💻</div>
+                    <h3>Worker</h3>
+                    <p class="role-subtitle" style="color:#818CF8;">Earn by completing tasks</p>
+                    <p>Get matched with tasks that fit your skills and start earning on your schedule.</p>
+                    <ul><li>Set your own rates</li><li>Flexible schedule</li><li>Instant UPI payments</li></ul>
+                </div>
+                <div class="role-card" onclick="selectRole('both')" id="role-both">
+                    <div class="checkmark">✓</div>
+                    <div class="role-icon" style="background:rgba(124,58,237,0.2);color:#A78BFA;">⚡</div>
+                    <h3>Both</h3>
+                    <p class="role-subtitle" style="color:#A78BFA;">Hire and earn</p>
+                    <p>Get the best of both worlds — post tasks and complete them on one platform.</p>
+                    <ul><li>Full platform access</li><li>Dual profile support</li><li>Maximum flexibility</li></ul>
+                </div>
+            </div>
+            <div class="role-continue">
+                <button class="btn btn-primary btn-lg" onclick="navigateTo(4)" id="role-continue-btn">Continue as Worker</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 4: PROFILE SETUP ==================== -->
+    <div class="page" id="page-4">
+        <div class="setup-page">
+            <div class="setup-sidebar">
+                <div class="setup-logo">⚡ SideQuest</div>
+                <div class="setup-progress-label">SETUP PROGRESS</div>
+                <ul class="setup-steps">
+                    <li class="active-step"><span class="step-circle">1</span> Profile</li>
+                    <li class="pending"><span class="step-circle">2</span> Skills</li>
+                    <li class="pending"><span class="step-circle">3</span> Portfolio</li>
+                </ul>
+                <div class="pro-tip">💡 <strong>Pro Tip:</strong> Profiles with a clear photo get 3× more task selections. Make a great first impression!</div>
+            </div>
+            <div class="setup-main">
+                <div class="step-label">STEP 1 OF 3</div>
+                <h2>Set up your profile</h2>
+                <p class="setup-subtitle">This information helps clients find and trust you</p>
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h4 style="margin-bottom:0.75rem;">Profile Photo</h4>
+                    <div class="photo-upload-area" onclick="document.getElementById('file-input').click()">
+                        <img id="profile-photo-preview" alt="Profile preview" style="display:none;width:96px;height:96px;border-radius:50%;object-fit:cover;margin:0 auto 0.75rem;box-shadow:var(--shadow-md);">
+                        <div id="photo-upload-copy">
+                            <div style="font-size:2.5rem;">📷</div>
+                            <p style="color:var(--text-secondary);margin:0.5rem 0;">Click to upload</p>
+                            <p style="font-size:0.75rem;color:var(--text-muted);">JPG or PNG, at least 400×400px</p>
+                        </div>
+                        <input type="file" id="file-input" style="display:none;" accept="image/*">
+                    </div>
+                </div>
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h4 style="margin-bottom:0.75rem;">Professional Title</h4>
+                    <div class="title-chips" id="title-chips">
+                        <span class="chip selected" onclick="selectTitleChip(this)">Full Stack Developer</span>
+                        <span class="chip" onclick="selectTitleChip(this)">React Developer</span>
+                        <span class="chip" onclick="selectTitleChip(this)">WordPress Expert</span>
+                        <span class="chip" onclick="selectTitleChip(this)">DevOps Engineer</span>
+                        <span class="chip" onclick="selectTitleChip(this)">AI Engineer</span>
+                        <span class="chip" onclick="selectTitleChip(this)">Backend Developer</span>
+                        <span class="chip" onclick="selectTitleChip(this)">UI/UX Designer</span>
+                        <span class="chip" onclick="selectTitleChip(this)">Mobile Developer</span>
+                    </div>
+                    <input type="text" placeholder="Or type a custom title..." style="width:100%;padding:0.6rem 0.9rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:0.9rem;" id="custom-title">
+                </div>
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h4 style="margin-bottom:0.75rem;">Short Bio</h4>
+                    <textarea rows="4" placeholder="I'm a full-stack developer with 5+ years of experience building scalable web applications. Specialized in React, Node.js, and cloud infrastructure..." style="width:100%;padding:0.7rem 0.9rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:0.9rem;resize:vertical;" id="bio-input" maxlength="150" oninput="updateCharCount()"></textarea>
+                    <div style="text-align:right;font-size:0.8rem;color:var(--text-muted);"><span id="char-count">0</span>/150</div>
+                </div>
+                <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" onclick="navigateTo(5)">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 5: SKILLS & EXPERIENCE ==================== -->
+    <div class="page" id="page-5">
+        <div class="setup-page">
+            <div class="setup-sidebar">
+                <div class="setup-logo">⚡ SideQuest</div>
+                <div class="setup-progress-label">SETUP PROGRESS</div>
+                <ul class="setup-steps">
+                    <li class="done"><span class="step-circle">✓</span> Profile</li>
+                    <li class="active-step"><span class="step-circle">2</span> Skills</li>
+                    <li class="pending"><span class="step-circle">3</span> Portfolio</li>
+                </ul>
+                <div style="background:rgba(255,255,255,0.05);border-radius:var(--radius);padding:1rem;margin-top:1rem;">
+                    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:0.5rem;">SELECTED SKILLS (<span id="selected-skills-count">3</span>)</p>
+                    <div id="selected-skills-display" style="display:flex;flex-wrap:wrap;gap:0.35rem;"></div>
+                </div>
+                <div class="pro-tip">💡 <strong>Pro Tip:</strong> Developers with 5+ listed skills get matched to 4× more opportunities.</div>
+            </div>
+            <div class="setup-main">
+                <div class="step-label">STEP 2 OF 3</div>
+                <h2>Skills & Experience</h2>
+                <p class="setup-subtitle">Select your skills to get matched with relevant tasks</p>
+                <div class="skill-category-card"><h4>🔵 Frontend</h4><div class="skill-chips" data-category="frontend"><span class="chip selected" onclick="toggleSkill(this)">React</span><span class="chip" onclick="toggleSkill(this)">Next.js</span><span class="chip" onclick="toggleSkill(this)">Angular</span><span class="chip" onclick="toggleSkill(this)">Vue.js</span><span class="chip selected" onclick="toggleSkill(this)">TypeScript</span><span class="chip" onclick="toggleSkill(this)">Tailwind CSS</span></div></div>
+                <div class="skill-category-card"><h4>🟢 Backend</h4><div class="skill-chips" data-category="backend"><span class="chip selected" onclick="toggleSkill(this)">Node.js</span><span class="chip" onclick="toggleSkill(this)">Python</span><span class="chip" onclick="toggleSkill(this)">Java</span><span class="chip" onclick="toggleSkill(this)">Go</span><span class="chip" onclick="toggleSkill(this)">PHP</span><span class="chip" onclick="toggleSkill(this)">Ruby on Rails</span></div></div>
+                <div class="skill-category-card"><h4>🟠 Database</h4><div class="skill-chips" data-category="database"><span class="chip" onclick="toggleSkill(this)">PostgreSQL</span><span class="chip" onclick="toggleSkill(this)">MongoDB</span><span class="chip" onclick="toggleSkill(this)">MySQL</span><span class="chip" onclick="toggleSkill(this)">Redis</span><span class="chip" onclick="toggleSkill(this)">Firebase</span></div></div>
+                <div class="skill-category-card"><h4>🟣 Mobile & Other</h4><div class="skill-chips" data-category="mobile"><span class="chip" onclick="toggleSkill(this)">Flutter</span><span class="chip" onclick="toggleSkill(this)">React Native</span><span class="chip" onclick="toggleSkill(this)">WordPress</span><span class="chip" onclick="toggleSkill(this)">UI/UX</span><span class="chip" onclick="toggleSkill(this)">DevOps</span><span class="chip" onclick="toggleSkill(this)">AI/ML</span><span class="chip" onclick="toggleSkill(this)">Docker</span><span class="chip" onclick="toggleSkill(this)">AWS</span></div></div>
+                <div class="card" style="margin-bottom:1rem;"><h4 style="margin-bottom:0.75rem;">Experience Level</h4><div class="exp-buttons"><button class="exp-btn" onclick="selectExp(this)">Student</button><button class="exp-btn" onclick="selectExp(this)">Fresher</button><button class="exp-btn" onclick="selectExp(this)">1–2 Years</button><button class="exp-btn selected" onclick="selectExp(this)">3–5 Years</button><button class="exp-btn" onclick="selectExp(this)">5+ Years</button></div></div>
+                <div class="card" style="margin-bottom:1rem;"><h4 style="margin-bottom:0.75rem;">Pricing</h4><div class="pricing-row"><div class="pricing-input"><span class="prefix">₹</span><input type="number" value="800" id="hourly-rate" style="width:100%;padding:0.6rem 0.9rem 0.6rem 1.8rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:0.9rem;"><div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.25rem;">Per hour rate</div></div><div class="pricing-input"><span class="prefix">₹</span><input type="number" value="500" id="min-task" style="width:100%;padding:0.6rem 0.9rem 0.6rem 1.8rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:0.9rem;"><div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.25rem;">Minimum per task</div></div></div></div>
+                <div class="card" style="margin-bottom:1.5rem;"><h4 style="margin-bottom:0.75rem;">Availability</h4><div class="avail-btns"><button class="avail-btn selected" onclick="toggleAvail(this)">Full-Time</button><button class="avail-btn" onclick="toggleAvail(this)">Part-Time</button><button class="avail-btn selected" onclick="toggleAvail(this)">Weekends</button></div></div>
+                <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" onclick="navigateTo(6)">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 6: PORTFOLIO & VERIFICATION ==================== -->
+    <div class="page" id="page-6">
+        <div class="setup-page">
+            <div class="setup-sidebar">
+                <div class="setup-logo">⚡ SideQuest</div>
+                <div class="setup-progress-label">SETUP PROGRESS</div>
+                <ul class="setup-steps">
+                    <li class="done"><span class="step-circle">✓</span> Profile</li>
+                    <li class="done"><span class="step-circle">✓</span> Skills</li>
+                    <li class="active-step"><span class="step-circle">3</span> Portfolio</li>
+                </ul>
+                <div style="margin-top:auto;">
+                    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:0.5rem;">PROFILE STRENGTH</p>
+                    <div class="profile-strength-bar"><div class="profile-strength-fill" style="width:75%;"></div></div>
+                    <p style="font-size:0.75rem;color:#A5B4FC;margin-top:0.4rem;">75% — Almost there! Add portfolio links to boost your profile.</p>
+                </div>
+            </div>
+            <div class="setup-main">
+                <div class="step-label">STEP 3 OF 3</div>
+                <h2>Portfolio & Verification</h2>
+                <p class="setup-subtitle">Add your work links and verify your identity</p>
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h4 style="margin-bottom:1rem;">Portfolio Links</h4>
+                    <div class="form-group"><label>🔗 LinkedIn</label><input type="url" placeholder="https://linkedin.com/in/yourprofile"></div>
+                    <div class="form-group"><label>🐙 GitHub</label><input type="url" value="github.com/arjunsharma"></div>
+                    <div class="form-group"><label>🌐 Portfolio Website</label><input type="url" placeholder="https://yourwebsite.com"></div>
+                </div>
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h4 style="margin-bottom:1rem;">Identity Verification</h4>
+                    <div class="verification-row"><span>📧 arjun@example.com</span><span class="badge badge-green">✓ Verified</span></div>
+                    <div class="verification-row"><span>📱 +91 98765 43210</span><button class="btn btn-primary btn-sm">Send OTP</button></div>
+                </div>
+                <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" onclick="navigateTo(7)">Complete Profile →</button>
+                <p style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:0.75rem;">You can add more portfolio items from your dashboard</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 7: WORKER DASHBOARD ==================== -->
+    <div class="page" id="page-7">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-logo"><span class="zap-icon">⚡</span> SideQuest</div>
+                <div class="sidebar-availability"><span class="pulsing-dot dot-green"></span> ONLINE</div>
+                <nav class="sidebar-nav">
+                    <a class="active-nav" onclick="navigateTo(7)">📊 Dashboard</a>
+                    <a onclick="navigateTo(9)">🔍 Opportunities</a>
+                    <a onclick="navigateTo(13)">📋 Active Tasks</a>
+                    <a onclick="navigateTo(12)">💬 Messages</a>
+                    <a onclick="navigateTo(17)">💰 Earnings</a>
+                    <a onclick="navigateTo(18)">👤 Profile</a>
+                    <a>⚙️ Settings</a>
+                </nav>
+                <div class="sidebar-footer">
+                    <div class="avatar">AR</div>
+                    <div class="user-info"><div class="user-name">Arjun Sharma</div><div class="user-title">Full Stack Developer</div></div>
+                    <span style="cursor:pointer;">🚪</span>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="topbar">
+                    <span class="notif-bell" onclick="navigateTo(8)">🔔<span class="notif-dot"></span></span>
+                    <div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div>
+                </div>
+                <div class="page-content">
+                    <div class="page-header-row">
+                        <div><h1 class="greeting">Good morning, Arjun 👋</h1><p class="greeting-sub">Tuesday, 18 June 2026 · 6 new opportunities today</p></div>
+                        <div class="avail-toggle" onclick="toggleAvailability()">
+                            <span id="avail-label">ONLINE</span>
+                            <div class="toggle-switch on" id="avail-switch"><div class="toggle-knob"></div></div>
+                        </div>
+                    </div>
+                    <div class="stats-row-dash">
+                        <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7;">⭐</div><div class="stat-value">4.9</div><div class="stat-label-text">Rating</div><div class="trend">+0.1</div></div>
+                        <div class="stat-card"><div class="stat-icon" style="background:#D1FAE5;">📈</div><div class="stat-value">98%</div><div class="stat-label-text">Reliability Score</div><div class="trend">+2%</div></div>
+                        <div class="stat-card"><div class="stat-icon" style="background:#EEF2FF;">✅</div><div class="stat-value">63</div><div class="stat-label-text">Tasks Completed</div><div class="trend">+3</div></div>
+                        <div class="stat-card"><div class="stat-icon" style="background:#EDE9FE;">💵</div><div class="stat-value">₹1,24,500</div><div class="stat-label-text">Total Earnings</div><div class="trend">₹3,200</div></div>
+                    </div>
+                    <div class="dash-grid">
+                        <div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;"><h3>Available Opportunities</h3><a href="#" onclick="navigateTo(9)" style="color:var(--primary);font-weight:600;font-size:0.85rem;">View all →</a></div>
+                            <div class="task-card-mini"><span class="urgency-badge urgency-urgent">URGENT</span> <small style="color:var(--text-muted);">· 4 min ago</small><h4 style="margin:0.4rem 0;">Fix broken Stripe webhook handler</h4><p style="font-size:0.85rem;color:var(--text-secondary);">Payment processing failing due to webhook signature...</p><div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;"><strong>₹2,500–4,000</strong><span style="font-size:0.8rem;color:var(--text-muted);">2–4 hrs</span><button class="btn btn-primary btn-sm" onclick="navigateTo(10)">View Details →</button></div></div>
+                            <div class="task-card-mini"><span class="urgency-badge urgency-high">HIGH</span> <small style="color:var(--text-muted);">· 25 min ago</small><h4 style="margin:0.4rem 0;">React dashboard performance optimization</h4><p style="font-size:0.85rem;color:var(--text-secondary);">Large dataset causing render bottlenecks...</p><div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;"><strong>₹3,000–5,000</strong><span style="font-size:0.8rem;color:var(--text-muted);">3–5 hrs</span><button class="btn btn-primary btn-sm" onclick="navigateTo(10)">View Details →</button></div></div>
+                            <div class="task-card-mini"><span class="urgency-badge urgency-normal">NORMAL</span> <small style="color:var(--text-muted);">· 1 hr ago</small><h4 style="margin:0.4rem 0;">Deploy Next.js app on Vercel</h4><p style="font-size:0.85rem;color:var(--text-secondary);">Need help configuring deployment pipeline...</p><div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;"><strong>₹800–1,500</strong><span style="font-size:0.8rem;color:var(--text-muted);">1–2 hrs</span><button class="btn btn-primary btn-sm" onclick="navigateTo(10)">View Details →</button></div></div>
+                        </div>
+                        <div>
+                            <div class="card" style="background:var(--primary-light);border-color:#C7D2FE;margin-bottom:1rem;cursor:pointer;" onclick="navigateTo(8)">
+                                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;"><span style="font-size:1.2rem;">🔔</span><strong style="color:var(--primary);">NEW OPPORTUNITY</strong><span class="pulsing-dot dot-red"></span></div>
+                                <h4>Website Checkout Page Broken</h4>
+                                <p style="font-size:0.8rem;color:var(--text-secondary);">₹2,500–4,000 · 2–4 hrs · Node.js, Stripe</p>
+                                <p style="font-size:0.75rem;color:#DC2626;margin-top:0.4rem;">⏰ Respond within 4:32</p>
+                            </div>
+                            <div class="card" style="margin-bottom:1rem;"><h4 style="margin-bottom:0.75rem;">Recent Activity</h4>
+                                <div style="font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid #F1F5F9;">💵 Payment received — <strong>₹3,200</strong> <small style="color:var(--text-muted);">· 2h ago</small></div>
+                                <div style="font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid #F1F5F9;">⭐ New 5-star review <small style="color:var(--text-muted);">· 5h ago</small></div>
+                                <div style="font-size:0.85rem;padding:0.4rem 0;">⚡ Task marked complete <small style="color:var(--text-muted);">· 1d ago</small></div>
+                            </div>
+                            <div class="card"><h4 style="margin-bottom:0.75rem;">Quick Actions</h4>
+                                <div style="font-size:0.85rem;padding:0.35rem 0;cursor:pointer;" onclick="navigateTo(9)">→ Browse All Tasks</div>
+                                <div style="font-size:0.85rem;padding:0.35rem 0;cursor:pointer;" onclick="navigateTo(17)">→ View Earnings</div>
+                                <div style="font-size:0.85rem;padding:0.35rem 0;">→ Update Availability</div>
+                                <div style="font-size:0.85rem;padding:0.35rem 0;cursor:pointer;" onclick="navigateTo(18)">→ Public Profile</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 8: OPPORTUNITY NOTIFICATION ==================== -->
+    <div class="page" id="page-8">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar-8"></div>
+            <div class="main-content">
+                <div class="topbar"><span class="notif-bell">🔔<span class="notif-dot"></span></span><div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div></div>
+                <div class="page-content" id="notif-content">
+                    <div class="page-header-row"><div><h1>⚡ Incoming Opportunity</h1><p class="greeting-sub">A new task matched your skills — respond quickly!</p></div></div>
+                    <div class="countdown-banner" id="countdown-banner">
+                        <strong>⏰ Respond within <span id="countdown-display" class="countdown-timer">4:32</span></strong>
+                        <div class="countdown-progress"><div class="countdown-progress-fill" id="countdown-fill" style="width:100%;"></div></div>
+                    </div>
+                    <div class="card" style="margin-bottom:1.5rem;" id="task-detail-card">
+                        <span class="urgency-badge urgency-urgent">URGENT</span> <small style="color:var(--text-muted);">· Posted 4 minutes ago</small>
+                        <h2 style="margin:0.75rem 0;">Website Checkout Page Broken</h2>
+                        <p style="color:var(--text-secondary);margin-bottom:1rem;">Our Stripe-powered checkout page is returning 500 errors after the latest deployment. Webhook signatures aren't being validated correctly, and customers are unable to complete payments. We need an experienced Node.js developer to debug and fix this urgently.</p>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;">
+                            <div><strong>Budget</strong><br><span style="color:var(--primary);font-weight:700;">₹2,500–4,000</span></div>
+                            <div><strong>Duration</strong><br>2–4 hrs</div>
+                            <div><strong>Client Rating</strong><br>4.8★ (23 tasks)</div>
+                        </div>
+                        <div style="margin-bottom:1rem;"><strong>Required Skills:</strong> <span class="chip chip-sm selected">Node.js</span> <span class="chip chip-sm selected">Stripe API</span> <span class="chip chip-sm selected">Webhooks</span> <span class="chip chip-sm selected">JavaScript</span> <span class="chip chip-sm selected">Debugging</span></div>
+                        <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:#F8FAFC;border-radius:var(--radius);">
+                            <div class="avatar" style="width:40px;height:40px;font-size:0.8rem;background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">PM</div>
+                            <div><strong>Priya Mehta</strong> · FinPay <br><small style="color:var(--text-muted);">23 tasks posted</small></div>
+                            <span style="margin-left:auto;">⭐ 4.8</span>
+                        </div>
+                        <div style="background:#EEF2FF;padding:0.6rem 1rem;border-radius:var(--radius);margin-top:0.75rem;color:var(--primary);font-weight:600;font-size:0.85rem;">⚠️ 3 developers viewing this now</div>
+                    </div>
+                    <div style="display:flex;gap:1rem;" id="action-buttons">
+                        <button class="btn btn-outline btn-lg" style="flex:1;justify-content:center;" onclick="declineOpportunity()">Not Interested</button>
+                        <button class="btn btn-primary btn-lg" style="flex:1;justify-content:center;" onclick="acceptOpportunity()">I'm Interested ✓</button>
+                    </div>
+                    <div id="post-response" style="display:none;text-align:center;padding:2rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 9: OPPORTUNITIES MARKETPLACE ==================== -->
+    <div class="page" id="page-9">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar-9"></div>
+            <div class="main-content">
+                <div class="topbar"><span class="notif-bell">🔔</span><div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div></div>
+                <div class="page-content">
+                    <div class="page-header-row"><div><h1>Opportunities</h1><p class="greeting-sub">8 active tasks matching your skills</p></div><span class="badge badge-red">⚡ LIVE — updates every 30s</span></div>
+                    <div class="filter-bar"><input type="text" placeholder="🔍 Search tasks..." id="task-search" oninput="filterTasks()"><select id="urgency-filter" onchange="filterTasks()"><option value="all">All Urgencies</option><option value="URGENT">Urgent</option><option value="HIGH">High</option><option value="NORMAL">Normal</option></select></div>
+                    <div class="category-tabs" id="category-tabs">
+                        <button class="category-tab active" onclick="setCategoryFilter('all',this)">All</button>
+                        <button class="category-tab" onclick="setCategoryFilter('Frontend',this)">Frontend</button>
+                        <button class="category-tab" onclick="setCategoryFilter('Backend',this)">Backend</button>
+                        <button class="category-tab" onclick="setCategoryFilter('DevOps',this)">DevOps</button>
+                        <button class="category-tab" onclick="setCategoryFilter('Mobile',this)">Mobile</button>
+                        <button class="category-tab" onclick="setCategoryFilter('WordPress',this)">WordPress</button>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="data-table" id="tasks-table">
+                            <thead><tr><th>Task</th><th>Budget</th><th>Urgency</th><th>Skills</th><th>Client ★</th><th>Posted</th><th>Action</th></tr></thead>
+                            <tbody id="tasks-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div id="empty-state" style="display:none;text-align:center;padding:3rem;color:var(--text-muted);">No tasks match your filters. Try adjusting your search criteria.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 10: TASK DETAILS & PROPOSAL ==================== -->
+    <div class="page" id="page-10">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar-10"></div>
+            <div class="main-content">
+                <div class="topbar"><span class="notif-bell">🔔</span><div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div></div>
+                <div class="page-content">
+                    <button class="btn btn-ghost btn-sm" onclick="navigateTo(9)" style="margin-bottom:1rem;">← Back to Opportunities</button>
+                    <div class="dash-grid">
+                        <div>
+                            <div class="card" style="margin-bottom:1.5rem;">
+                                <span class="urgency-badge urgency-urgent">URGENT</span> <small style="color:var(--text-muted);">· Posted 4 minutes ago · Backend · Stripe</small>
+                                <h2 style="margin:0.75rem 0;">Fix broken Stripe webhook handler</h2>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;background:#F8FAFC;padding:1rem;border-radius:var(--radius);">
+                                    <div><strong>Budget</strong><br><span style="color:var(--primary);font-weight:700;">₹2,500–4,000</span></div>
+                                    <div><strong>Est. Duration</strong><br>2–4 hrs</div>
+                                    <div><strong>Proposals</strong><br>2 so far</div>
+                                </div>
+                                <p style="color:var(--text-secondary);">Our checkout page is returning 500 errors after the latest deployment. The Stripe webhook endpoint isn't validating signatures correctly. Customers are unable to complete payments — this is directly impacting revenue.</p>
+                                <p style="color:var(--text-secondary);">The issue appears to be related to the webhook secret key configuration. We recently rotated our Stripe API keys, and the webhook signing secret may not have been updated in the environment variables.</p>
+                                <p style="color:var(--text-secondary);">We need someone who can access our staging environment, reproduce the error, identify the root cause, and deploy a fix.</p>
+                                <div style="margin-top:1rem;"><strong>Required Skills:</strong> <span class="chip chip-sm selected">Node.js</span> <span class="chip chip-sm selected">Stripe API</span> <span class="chip chip-sm selected">Webhooks</span> <span class="chip chip-sm selected">JavaScript</span> <span class="chip chip-sm selected">Debugging</span> <span class="chip chip-sm selected">Express.js</span></div>
+                            </div>
+                            <div class="card" id="proposal-form-card">
+                                <h3 style="margin-bottom:1rem;">Submit Your Proposal</h3>
+                                <div class="form-group"><label>Proposed Price (₹)</label><input type="number" placeholder="e.g. 3200" id="proposal-price" style="width:100%;"><small style="color:var(--text-muted);">Client budget: ₹2,500–4,000</small></div>
+                                <div class="form-group"><label>Estimated Time (ETA)</label><input type="text" placeholder="e.g. 2-3 hours" id="proposal-eta" style="width:100%;"></div>
+                                <div class="form-group"><label>Your Message to the Client</label><textarea rows="5" placeholder="Hi Priya, I've worked extensively with Stripe webhooks and have debugged similar signature validation issues before. I can start immediately and expect to have this resolved within 2-3 hours..." id="proposal-msg" style="width:100%;resize:vertical;"></textarea></div>
+                                <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" onclick="submitProposal()">Submit Proposal →</button>
+                            </div>
+                            <div id="proposal-success" style="display:none;text-align:center;padding:3rem;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow);">
+                                <div style="font-size:3rem;">✅</div><h2>Proposal Submitted!</h2><p style="color:var(--text-secondary);">Waiting for client response...</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="card" style="margin-bottom:1rem;">
+                                <h4 style="margin-bottom:0.75rem;">Client Info</h4>
+                                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;"><div class="avatar" style="width:48px;height:48px;font-size:1rem;background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">PM</div><div><strong>Priya Mehta</strong><br><small style="color:var(--text-muted);">FinPay · Technical Lead</small></div></div>
+                                <div class="detail-row"><span>Tasks Posted</span><strong>23</strong></div>
+                                <div class="detail-row"><span>Avg. Rating Given</span><strong>4.8★</strong></div>
+                                <div class="detail-row"><span>Total Spent</span><strong>₹2,14,000</strong></div>
+                                <div class="detail-row"><span>Member Since</span><strong>March 2024</strong></div>
+                            </div>
+                            <div class="card" style="background:var(--primary-light);border-color:#C7D2FE;margin-bottom:1rem;">
+                                <h4 style="margin-bottom:0.5rem;">Your Match Score</h4>
+                                <div style="text-align:center;font-size:3rem;font-weight:800;color:var(--primary);">87%</div>
+                                <p style="text-align:center;color:var(--primary);font-weight:600;">Excellent Match</p>
+                                <p style="text-align:center;font-size:0.8rem;color:var(--text-secondary);">4 of 6 skills match</p>
+                                <div style="font-size:0.85rem;"><span style="color:#10B981;">✓</span> Node.js &nbsp; <span style="color:#10B981;">✓</span> JavaScript &nbsp; <span style="color:#10B981;">✓</span> Debugging &nbsp; <span style="color:#10B981;">✓</span> Webhooks<br><span style="color:#94A3B8;">—</span> Stripe API &nbsp; <span style="color:#94A3B8;">—</span> Express.js</div>
+                            </div>
+                            <div class="card">
+                                <h4 style="margin-bottom:0.5rem;">Your Profile</h4>
+                                <div class="detail-row"><span>Rating</span><strong>4.9★</strong></div>
+                                <div class="detail-row"><span>Tasks Done</span><strong>63</strong></div>
+                                <div class="detail-row"><span>Reliability</span><strong>98%</strong></div>
+                                <div class="detail-row"><span>Response</span><strong>&lt; 3 min</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 11: TASK SELECTED ==================== -->
+    <div class="page" id="page-11">
+        <div style="min-height:100vh;background:linear-gradient(135deg,#F0F2F8,#EEF2FF);display:flex;align-items:center;justify-content:center;padding:2rem;">
+            <div class="success-card" style="max-width:550px;">
+                <div class="success-icon">🎉</div>
+                <div style="font-size:3rem;color:#10B981;margin-bottom:0.5rem;">✓</div>
+                <span class="badge badge-green"><span class="pulsing-dot dot-green"></span> YOU'VE BEEN SELECTED</span>
+                <h2 style="margin:1rem 0;">Congratulations, Arjun!</h2>
+                <p style="color:var(--text-secondary);">Priya Mehta from FinPay has selected you for this task.</p>
+                <div class="card" style="background:#F8FAFC;margin:1.5rem 0;text-align:left;">
+                    <h4>Website Checkout Page Broken</h4>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
+                        <div><strong>💰 Agreed Budget</strong><br><span style="color:var(--primary);font-weight:700;">₹3,200</span></div>
+                        <div><strong>⏰ Timeline</strong><br>3 hours</div>
+                        <div><strong>📅 Start By</strong><br>Immediately</div>
+                        <div><strong>⭐ Client Rating</strong><br>4.8★</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.75rem;justify-content:center;margin-bottom:1.5rem;">
+                    <div class="avatar" style="width:40px;height:40px;background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">PM</div>
+                    <div><strong>Priya Mehta</strong> · FinPay</div>
+                    <span class="badge badge-green">Waiting to chat</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                    <button class="btn btn-outline btn-lg" style="justify-content:center;" onclick="navigateTo(12)">💬 Open Chat</button>
+                    <button class="btn btn-primary btn-lg" style="justify-content:center;" onclick="navigateTo(13)">▶ Start Work</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 12: WORKSPACE & CHAT ==================== -->
+    <div class="page" id="page-12">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar-12"></div>
+            <div class="main-content">
+                <div class="topbar"><span class="notif-bell">🔔</span><div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div></div>
+                <div class="page-content">
+                    <div class="page-header-row"><div><h1>Website Checkout Page Broken</h1><p class="greeting-sub">Priya Mehta · FinPay</p></div><span class="badge badge-indigo"><span class="pulsing-dot dot-indigo"></span> IN PROGRESS</span></div>
+                    <div class="dash-grid" style="grid-template-columns:3fr 2fr;">
+                        <div class="chat-panel">
+                            <div class="chat-header"><div class="avatar" style="width:36px;height:36px;font-size:0.75rem;background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">PM</div><div><strong>Priya Mehta</strong><br><small style="color:#10B981;">Online <span class="pulsing-dot dot-green"></span></small></div></div>
+                            <div class="chat-messages" id="chat-messages">
+                                <div class="chat-bubble client"><strong>Priya Mehta</strong><br>Hi Arjun, thanks for picking this up! The checkout page has been broken since this morning. Customers are getting 500 errors.</div>
+                                <div class="chat-bubble worker"><strong>You</strong><br>Hi Priya! I'll jump right in. Can you share the staging environment URL and any recent changes?</div>
+                                <div class="chat-bubble client"><strong>Priya Mehta</strong><br>Sure — staging is at staging.finpay.in. We rotated Stripe API keys yesterday. I think the webhook secret wasn't updated.</div>
+                                <div class="chat-bubble worker"><strong>You</strong><br>That's likely the culprit. Let me access the staging env and check the webhook configuration. Give me ~30 minutes.</div>
+                                <div class="chat-bubble client"><strong>Priya Mehta</strong><br>Perfect. The env vars are in Vercel dashboard — I've added you as a collaborator. Let me know what you find!</div>
+                                <div class="chat-bubble worker"><strong>You</strong><br>Got it. I can see the issue — the STRIPE_WEBHOOK_SECRET in staging still has the old key. I'll update it and test. Should be fixed shortly.</div>
+                            </div>
+                            <div class="chat-input-bar">
+                                <button style="background:none;border:none;font-size:1.1rem;cursor:pointer;">📎</button>
+                                <button style="background:none;border:none;font-size:1.1rem;cursor:pointer;">🖼️</button>
+                                <input type="text" placeholder="Type your message..." id="chat-input" onkeydown="if(event.key==='Enter')sendChat()">
+                                <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="card" style="margin-bottom:1rem;"><h4>Task Information</h4><div class="detail-row"><span>Budget</span><strong>₹3,200</strong></div><div class="detail-row"><span>Timeline</span><strong>3 hrs (by 1:30 PM)</strong></div><div class="detail-row"><span>Category</span><strong>Backend — Stripe</strong></div><div class="detail-row"><span>Started</span><strong>10:02 AM today</strong></div></div>
+                            <div class="card" style="margin-bottom:1rem;"><h4>Task Status</h4>
+                                <div class="timeline-step"><div class="tl-icon done">✓</div><div><strong>Assigned</strong><br><small style="color:var(--text-muted);">10:00 AM</small></div></div>
+                                <div class="timeline-step"><div class="tl-icon active">●</div><div><strong>In Progress</strong> <span class="badge badge-indigo">Current</span><br><small style="color:var(--text-muted);">10:05 AM</small></div></div>
+                                <div class="timeline-step"><div class="tl-icon pending">○</div><div><strong>Awaiting Review</strong></div></div>
+                                <div class="timeline-step"><div class="tl-icon pending">○</div><div><strong>Completed</strong></div></div>
+                            </div>
+                            <div class="card"><h4>Deliverables</h4><div style="border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;margin-bottom:1rem;">📤<br>Drag & drop files here<br><small style="color:var(--text-muted);">or click to upload</small></div><button class="btn btn-success btn-lg" style="width:100%;justify-content:center;" onclick="navigateTo(14)">Mark Task Complete ✓</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 13: ACTIVE TASK PROGRESS ==================== -->
+    <div class="page" id="page-13">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar-13"></div>
+            <div class="main-content">
+                <div class="topbar"><span class="notif-bell">🔔</span><div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div></div>
+                <div class="page-content">
+                    <div class="page-header-row"><div><h1>Website Checkout Page Broken</h1><p class="greeting-sub">Priya Mehta · FinPay</p></div><button class="btn btn-success" onclick="navigateTo(14)">Mark Task Complete ✓</button></div>
+                    <div style="margin-bottom:0.25rem;display:flex;justify-content:space-between;"><span style="font-weight:600;">Overall Progress</span><span style="font-family:var(--font-mono);font-weight:700;">50%</span></div>
+                    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%;" id="progress-fill"></div></div>
+                    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1.5rem;">3 of 6 milestones done · Started 10:05 AM</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;">
+                        <div class="card"><h4 style="margin-bottom:0.75rem;">Timeline</h4>
+                            <div class="timeline-step"><div class="tl-icon done">✓</div><div><strong>Assigned</strong><br><small>10:00 AM</small></div></div>
+                            <div class="timeline-step"><div class="tl-icon active">●</div><div><strong>In Progress</strong> <span class="badge badge-indigo">Now</span><br><small>10:05 AM</small></div></div>
+                            <div class="timeline-step"><div class="tl-icon pending">○</div><div><strong>Awaiting Client Review</strong><br><small>—</small></div></div>
+                            <div class="timeline-step"><div class="tl-icon pending">○</div><div><strong>Completed</strong><br><small>—</small></div></div>
+                        </div>
+                        <div class="card"><h4 style="margin-bottom:0.75rem;">Task Milestones</h4>
+                            <div class="milestone-item done"><input type="checkbox" checked onclick="toggleMilestone(this)"><label>Access staging environment</label></div>
+                            <div class="milestone-item done"><input type="checkbox" checked onclick="toggleMilestone(this)"><label>Reproduce the webhook signature error</label></div>
+                            <div class="milestone-item done"><input type="checkbox" checked onclick="toggleMilestone(this)"><label>Identify root cause</label></div>
+                            <div class="milestone-item"><input type="checkbox" onclick="toggleMilestone(this)"><label>Push fix to staging branch</label></div>
+                            <div class="milestone-item"><input type="checkbox" onclick="toggleMilestone(this)"><label>Client verifies fix on staging</label></div>
+                            <div class="milestone-item"><input type="checkbox" onclick="toggleMilestone(this)"><label>Deploy to production</label></div>
+                            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:0.75rem;justify-content:center;" onclick="updateProgress()">Update Progress →</button>
+                        </div>
+                        <div class="card"><h4 style="margin-bottom:0.75rem;">Task Notes</h4>
+                            <div style="font-size:0.85rem;padding:0.5rem;background:#F8FAFC;border-radius:var(--radius);margin-bottom:0.5rem;"><small style="color:var(--text-muted);">10:25 AM · Arjun Sharma</small><p>Root cause identified: STRIPE_WEBHOOK_SECRET env var was not updated after key rotation. The staging environment still references the old signing secret.</p></div>
+                            <textarea rows="3" placeholder="Add a note..." style="width:100%;padding:0.5rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:0.85rem;resize:vertical;" id="note-input"></textarea>
+                            <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:0.5rem;" onclick="addNote()">+ Add Note</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 14: PAYMENT REQUEST ==================== -->
+    <div class="page" id="page-14">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar-14"></div>
+            <div class="main-content">
+                <div class="topbar"><span class="notif-bell">🔔</span><div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div></div>
+                <div class="page-content" style="max-width:700px;margin:0 auto;">
+                    <div class="card" style="background:#D1FAE5;border-color:#10B981;text-align:center;margin-bottom:1.5rem;">
+                        <div style="font-size:2.5rem;">✅</div><h3>Task Completed Successfully</h3><p style="color:#065F46;">The webhook fix has been deployed and verified by the client.</p>
+                    </div>
+                    <div class="card" style="margin-bottom:1.5rem;"><h4 style="margin-bottom:0.75rem;">Payment Summary</h4>
+                        <div class="detail-row"><span>Task</span><strong>Website Checkout Page Broken</strong></div>
+                        <div class="detail-row"><span>Client</span><strong>Priya Mehta</strong></div>
+                        <div class="detail-row"><span>Completed At</span><strong>1:08 PM, 18 June 2026</strong></div>
+                        <div class="detail-row"><span>Duration</span><strong>3 hrs 6 min</strong></div>
+                    </div>
+                    <div class="amount-display"><div style="font-size:0.8rem;color:#065F46;font-weight:600;">FINAL AMOUNT</div><div class="amount-value">₹3,200</div></div>
+                    <div class="card" style="margin-bottom:1.5rem;">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;"><div class="avatar" style="width:40px;height:40px;background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">PM</div><div><strong>Priya Mehta</strong> · FinPay</div><span class="badge badge-green">Trusted</span></div>
+                        <h4 style="margin-bottom:0.5rem;">Payment Method</h4>
+                        <div class="payment-method-selector">
+                            <div class="payment-method-option selected" onclick="selectPaymentMethod('upi',this)">📱<br><strong>UPI</strong><br><small>Instant · No fees</small></div>
+                            <div class="payment-method-option" onclick="selectPaymentMethod('razorpay',this)">💳<br><strong>Razorpay</strong><br><small>Card, Net Banking</small></div>
+                        </div>
+                    </div>
+                    <div id="request-section">
+                        <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" onclick="requestPayment()">Request Payment — ₹3,200</button>
+                    </div>
+                    <div id="waiting-section" style="display:none;">
+                        <div class="card" style="background:#FFFBEB;border-color:#F59E0B;text-align:center;">
+                            <div style="font-size:2rem;">⏰</div><h3>Waiting for Client Payment</h3><p style="color:#92400E;">Priya Mehta has been notified. Payment usually completes within a few minutes.</p>
+                            <button class="btn btn-ghost btn-sm" onclick="navigateTo(15)" style="margin-top:0.5rem;">Simulate Payment Received →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 15: PAYMENT RECEIVED ==================== -->
+    <div class="page" id="page-15">
+        <div style="min-height:100vh;background:linear-gradient(135deg,#F0F2F8,#D1FAE5);display:flex;align-items:center;justify-content:center;padding:2rem;">
+            <div class="success-card" style="max-width:550px;">
+                <div class="success-icon">💸</div>
+                <div style="font-size:3rem;color:#10B981;">✓</div>
+                <span class="badge badge-green"><span class="pulsing-dot dot-green"></span> PAYMENT RECEIVED</span>
+                <h2 style="margin:1rem 0;">Money in the Bank!</h2>
+                <p style="color:var(--text-secondary);">Priya Mehta has released the payment for Website Checkout Page Broken.</p>
+                <div class="amount-display"><div style="font-size:0.8rem;color:#065F46;font-weight:600;">AMOUNT RECEIVED</div><div class="amount-value">₹3,200</div></div>
+                <div class="card" style="text-align:left;margin-bottom:1rem;">
+                    <div class="detail-row"><span>📱 Payment Method</span><strong>UPI — PhonePe</strong></div>
+                    <div class="detail-row"><span>🔑 Transaction ID</span><strong style="font-family:var(--font-mono);">TXN2026061800847</strong></div>
+                    <div class="detail-row"><span>📅 Date & Time</span><strong>18 Jun 2026 · 1:34 PM IST</strong></div>
+                    <div class="detail-row"><span>💵 Platform Fee</span><strong style="color:#10B981;">₹0 (Free)</strong></div>
+                </div>
+                <div class="card" style="background:#EEF2FF;margin-bottom:1.5rem;text-align:left;">
+                    <strong>📈 This month's total: ₹18,200</strong><br><small style="color:#10B981;">+21% vs last month</small>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                    <button class="btn btn-outline btn-lg" style="justify-content:center;" onclick="navigateTo(16)">⭐ Rate Client</button>
+                    <button class="btn btn-primary btn-lg" style="justify-content:center;" onclick="navigateTo(17)">💰 View Earnings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 16: RATINGS & FEEDBACK ==================== -->
+    <div class="page" id="page-16">
+        <div style="min-height:100vh;background:#F0F2F8;padding:2rem;">
+            <div style="max-width:650px;margin:0 auto;">
+                <div class="card" style="text-align:center;margin-bottom:1.5rem;">
+                    <div class="avatar" style="width:56px;height:56px;font-size:1.2rem;background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;margin:0 auto 0.75rem;">PM</div>
+                    <h3>Priya Mehta</h3><p style="color:var(--text-secondary);">FinPay · Website Checkout Page Broken</p>
+                </div>
+                <div class="card" style="margin-bottom:1.5rem;"><h4 style="margin-bottom:1rem;">Rate Your Experience</h4>
+                    <div id="star-categories"></div>
+                </div>
+                <div class="card" style="margin-bottom:1.5rem;"><h4 style="margin-bottom:0.75rem;">Quick Tags</h4>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem;" id="positive-tags">
+                        <span class="chip" onclick="toggleTag(this,'positive')">Clear brief</span><span class="chip" onclick="toggleTag(this,'positive')">Fast responder</span><span class="chip" onclick="toggleTag(this,'positive')">Paid promptly</span><span class="chip" onclick="toggleTag(this,'positive')">Professional</span><span class="chip" onclick="toggleTag(this,'positive')">Great to work with</span><span class="chip" onclick="toggleTag(this,'positive')">Well-organized</span>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;" id="negative-tags">
+                        <span class="chip" onclick="toggleTag(this,'negative')">Vague requirements</span><span class="chip" onclick="toggleTag(this,'negative')">Delayed payment</span><span class="chip" onclick="toggleTag(this,'negative')">Poor communication</span>
+                    </div>
+                </div>
+                <div class="card" style="margin-bottom:1.5rem;"><h4 style="margin-bottom:0.75rem;">Written Feedback <small style="color:var(--text-muted);font-weight:400;">(optional)</small></h4><textarea rows="4" placeholder="Priya was a great client to work with. The task was clearly defined, and she provided all necessary access promptly. Payment was released immediately after verification..." style="width:100%;padding:0.7rem;border:1.5px solid var(--border);border-radius:var(--radius);resize:vertical;font-size:0.9rem;"></textarea></div>
+                <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" onclick="submitReview()" id="submit-review-btn">Submit Review ★</button>
+                <div id="review-success" style="display:none;text-align:center;padding:3rem;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);margin-top:1rem;">
+                    <div style="font-size:3rem;">✅</div><h2>Review Submitted!</h2><p style="color:var(--text-secondary);">Thank you for your feedback.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 17: EARNINGS DASHBOARD ==================== -->
+    <div class="page" id="page-17">
+        <div class="dashboard-layout">
+            <div class="sidebar" id="sidebar-17"></div>
+            <div class="main-content">
+                <div class="topbar"><span class="notif-bell">🔔</span><div class="avatar" style="width:34px;height:34px;font-size:0.75rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AR</div></div>
+                <div class="page-content">
+                    <div class="page-header-row"><div><h1>Earnings</h1><p class="greeting-sub">Track your income and withdrawals</p></div><button class="btn btn-outline btn-sm" id="export-csv-btn">📥 Export CSV</button></div>
+                    <div class="stats-row-dash">
+                        <div class="stat-card"><div class="stat-icon" style="background:#EDE9FE;">💰</div><div class="stat-value">₹1,24,500</div><div class="stat-label-text">Total Earnings</div><div class="trend">+21%</div></div>
+                        <div class="stat-card"><div class="stat-icon" style="background:#D1FAE5;">📅</div><div class="stat-value">₹18,200</div><div class="stat-label-text">This Month</div><div class="trend">+21%</div></div>
+                        <div class="stat-card"><div class="stat-icon" style="background:#EEF2FF;">✅</div><div class="stat-value">63</div><div class="stat-label-text">Tasks Completed</div><div class="trend">+3</div></div>
+                        <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7;">⭐</div><div class="stat-value">4.9★</div><div class="stat-label-text">Average Rating</div><div class="trend">+0.1</div></div>
+                    </div>
+                    <div class="dash-grid">
+                        <div class="chart-container"><h4 style="margin-bottom:1rem;">Earnings Trend</h4><div id="earnings-chart" style="width:100%;height:280px;"></div></div>
+                        <div>
+                            <div class="card" style="margin-bottom:1rem;"><h4 style="margin-bottom:0.75rem;">By Category</h4>
+                                <div class="category-bar"><span class="bar-label">Frontend</span><div style="flex:1;background:#E2E8F0;border-radius:4px;height:8px;"><div class="bar-fill" style="width:45%;background:#4338CA;"></div></div><span class="bar-pct">45%</span></div>
+                                <div class="category-bar"><span class="bar-label">Backend</span><div style="flex:1;background:#E2E8F0;border-radius:4px;height:8px;"><div class="bar-fill" style="width:30%;background:#7C3AED;"></div></div><span class="bar-pct">30%</span></div>
+                                <div class="category-bar"><span class="bar-label">DevOps</span><div style="flex:1;background:#E2E8F0;border-radius:4px;height:8px;"><div class="bar-fill" style="width:15%;background:#10B981;"></div></div><span class="bar-pct">15%</span></div>
+                                <div class="category-bar"><span class="bar-label">Other</span><div style="flex:1;background:#E2E8F0;border-radius:4px;height:8px;"><div class="bar-fill" style="width:10%;background:#F59E0B;"></div></div><span class="bar-pct">10%</span></div>
+                            </div>
+                            <div class="card"><h4 style="margin-bottom:0.75rem;">Bank Details</h4>
+                                <div class="detail-row"><span>Bank</span><strong>HDFC Bank</strong></div>
+                                <div class="detail-row"><span>Account</span><strong style="font-family:var(--font-mono);">••••4821</strong></div>
+                                <div class="detail-row"><span>IFSC</span><strong style="font-family:var(--font-mono);">HDFC0001234</strong></div>
+                                <div class="detail-row"><span>UPI</span><strong>arjun@hdfc</strong></div>
+                                <button class="btn btn-primary btn-sm" style="width:100%;margin-top:0.75rem;justify-content:center;" id="withdraw-earnings-btn">Withdraw Earnings</button>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 style="margin:1.5rem 0 0.75rem;">Transaction History</h4>
+                    <div style="overflow-x:auto;">
+                        <table class="data-table">
+                            <thead><tr><th>Transaction ID</th><th>Task</th><th>Client</th><th>Amount</th><th>Method</th><th>Date</th></tr></thead>
+                            <tbody>
+                                <tr><td style="font-family:var(--font-mono);color:var(--primary);">TXN2026061800847</td><td>Website Checkout Broken</td><td>Priya Mehta</td><td style="color:#059669;font-weight:600;">₹3,200</td><td><span class="badge badge-indigo">UPI</span></td><td>18 Jun 2026</td></tr>
+                                <tr><td style="font-family:var(--font-mono);color:var(--primary);">TXN2026061700623</td><td>React Dashboard Fix</td><td>Rahul Gupta</td><td style="color:#059669;font-weight:600;">₹4,500</td><td><span class="badge" style="background:#EDE9FE;color:#7C3AED;">Razorpay</span></td><td>17 Jun</td></tr>
+                                <tr><td style="font-family:var(--font-mono);color:var(--primary);">TXN2026061500411</td><td>API Integration CRM</td><td>Ananya Singh</td><td style="color:#059669;font-weight:600;">₹6,800</td><td><span class="badge badge-indigo">UPI</span></td><td>15 Jun</td></tr>
+                                <tr><td style="font-family:var(--font-mono);color:var(--primary);">TXN2026061200289</td><td>WordPress Plugin Fix</td><td>Vikram Shah</td><td style="color:#059669;font-weight:600;">₹1,500</td><td><span class="badge badge-indigo">UPI</span></td><td>12 Jun</td></tr>
+                                <tr><td style="font-family:var(--font-mono);color:var(--primary);">TXN2026060900108</td><td>CI/CD Pipeline Setup</td><td>Nisha Patel</td><td style="color:#059669;font-weight:600;">₹3,800</td><td><span class="badge" style="background:#EDE9FE;color:#7C3AED;">Razorpay</span></td><td>9 Jun</td></tr>
+                                <tr><td style="font-family:var(--font-mono);color:var(--primary);">TXN2026060500082</td><td>Mobile App Bug Fix</td><td>Aryan Mehta</td><td style="color:#059669;font-weight:600;">₹2,200</td><td><span class="badge badge-indigo">UPI</span></td><td>5 Jun</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 18: PUBLIC WORKER PROFILE ==================== -->
+    <div class="page" id="page-18">
+        <div style="min-height:100vh;background:#F0F2F8;">
+            <nav style="background:#fff;border-bottom:1px solid var(--border);padding:0.75rem 2rem;display:flex;align-items:center;gap:1.5rem;">
+                <span style="font-family:var(--font-heading);font-weight:700;font-size:1.1rem;">⚡ SideQuest</span>
+                <a href="#" onclick="navigateTo(7)" style="color:var(--primary);font-weight:500;font-size:0.9rem;">← Dashboard</a>
+            </nav>
+            <div style="max-width:1100px;margin:0 auto;padding:2rem;">
+                <div class="profile-hero">
+                    <div class="profile-avatar-lg">AR</div>
+                    <h1 style="font-size:2rem;">Arjun Sharma</h1>
+                    <p style="color:var(--primary);font-weight:600;font-size:1.1rem;">Full Stack Developer</p>
+                    <div style="display:flex;align-items:center;gap:0.5rem;justify-content:center;margin:0.5rem 0;">
+                        <span class="pulsing-dot dot-green"></span> <span style="color:#059669;font-weight:600;">Available Now</span>
+                    </div>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">Responds in &lt; 3 min</p>
+                    <button class="btn btn-primary btn-lg" style="margin-top:1rem;" onclick="navigateTo(2)">💬 Hire This Developer</button>
+                    <div class="profile-stats-tiles">
+                        <div style="text-align:center;"><strong style="color:#F59E0B;">4.9★</strong><br><small>Rating</small></div>
+                        <div style="text-align:center;"><strong style="color:#10B981;">98%</strong><br><small>Reliability</small></div>
+                        <div style="text-align:center;"><strong style="color:var(--primary);">63</strong><br><small>Tasks Done</small></div>
+                        <div style="text-align:center;"><strong style="color:#7C3AED;">₹3,400</strong><br><small>Avg. Task</small></div>
+                        <div style="text-align:center;"><strong style="color:var(--text-secondary);">Mar 2024</strong><br><small>Joined</small></div>
+                    </div>
+                </div>
+                <div class="dash-grid">
+                    <div>
+                        <div class="card" style="margin-bottom:1rem;"><h4>About</h4><p style="color:var(--text-secondary);margin-top:0.5rem;">Full-stack developer with 5+ years of experience building scalable web applications. Specialized in React, Node.js, and cloud infrastructure. I've completed 63 tasks on SideQuest with a 98% reliability score and 4.9★ average rating. I'm passionate about clean code, performance optimization, and delivering quality work on time.</p></div>
+                        <div class="card" style="margin-bottom:1rem;"><h4>Skills</h4><div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;"><span class="chip selected">React</span><span class="chip selected">Next.js</span><span class="chip selected">Node.js</span><span class="chip selected">TypeScript</span><span class="chip selected">PostgreSQL</span><span class="chip selected">Stripe API</span><span class="chip selected">Docker</span><span class="chip selected">AWS</span><span class="chip selected">GraphQL</span><span class="chip selected">Tailwind CSS</span></div></div>
+                        <div class="card"><h4>Client Reviews <span style="color:#F59E0B;">4.9</span> <small style="color:var(--text-muted);">(47 reviews)</small></h4>
+                            <div style="margin-top:0.75rem;">
+                                <div style="padding:0.75rem 0;border-bottom:1px solid #F1F5F9;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;"><div style="display:flex;align-items:center;gap:0.5rem;"><div class="avatar" style="width:32px;height:32px;font-size:0.65rem;background:linear-gradient(135deg,#F59E0B,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">PM</div><div><strong>Priya Mehta</strong><br><small>FinPay</small></div></div><span>⭐⭐⭐⭐⭐ · 18 Jun 2026</span></div>
+                                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.5rem;">Arjun debugged our Stripe webhook issue in under 3 hours. Incredibly fast, professional, and thorough. Highly recommended!</p>
+                                </div>
+                                <div style="padding:0.75rem 0;border-bottom:1px solid #F1F5F9;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;"><div style="display:flex;align-items:center;gap:0.5rem;"><div class="avatar" style="width:32px;height:32px;font-size:0.65rem;background:linear-gradient(135deg,#10B981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">RG</div><div><strong>Rahul Gupta</strong><br><small>Buildfast</small></div></div><span>⭐⭐⭐⭐⭐ · 17 Jun 2026</span></div>
+                                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.5rem;">Optimized our React dashboard — load times dropped from 8s to under 1s. Fantastic work.</p>
+                                </div>
+                                <div style="padding:0.75rem 0;border-bottom:1px solid #F1F5F9;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;"><div style="display:flex;align-items:center;gap:0.5rem;"><div class="avatar" style="width:32px;height:32px;font-size:0.65rem;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AS</div><div><strong>Ananya Singh</strong><br><small>ShopEasy</small></div></div><span>⭐⭐⭐⭐⭐ · 15 Jun 2026</span></div>
+                                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.5rem;">Seamless API integration work. Great communication throughout the project.</p>
+                                </div>
+                                <div style="padding:0.75rem 0;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;"><div style="display:flex;align-items:center;gap:0.5rem;"><div class="avatar" style="width:32px;height:32px;font-size:0.65rem;background:linear-gradient(135deg,#EF4444,#DC2626);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">VS</div><div><strong>Vikram Shah</strong><br><small>HealthFirst</small></div></div><span>⭐⭐⭐⭐ · 12 Jun 2026</span></div>
+                                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.5rem;">Fixed our WordPress plugin conflict quickly. Good work overall.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="background:var(--primary-light);border-color:#C7D2FE;margin-bottom:1rem;text-align:center;">
+                            <h4>Starting at ₹800/hr</h4><p style="color:var(--text-secondary);">Min. task: ₹500</p>
+                            <button class="btn btn-primary btn-lg" style="width:100%;margin-top:0.75rem;justify-content:center;" onclick="navigateTo(2)">Hire This Developer</button>
+                        </div>
+                        <div class="card" style="margin-bottom:1rem;"><h4 style="margin-bottom:0.75rem;">Verifications</h4>
+                            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                                <span>✅ Email Verified</span><span>✅ Phone Verified</span><span>✅ GitHub Verified</span><span>✅ LinkedIn Verified</span>
+                            </div>
+                        </div>
+                        <div class="card"><h4 style="margin-bottom:0.75rem;">Portfolio</h4>
+                            <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.9rem;">
+                                <a href="#" style="color:var(--primary);">🐙 github.com/arjunsharma</a>
+                                <a href="#" style="color:var(--primary);">🔗 linkedin.com/in/arjunsharma</a>
+                                <a href="#" style="color:var(--primary);">🌐 arjunsharma.dev</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== DEMO NAVIGATOR ==================== -->
+    <div id="demo-nav">
+        <button onclick="prevPage()" id="prev-btn" title="Previous">◀</button>
+        <div class="page-indicator" onclick="toggleDropdown()" id="page-indicator-btn">
+            📍 <span id="current-page-label">1. Landing</span> · <span id="page-counter">1/18</span>
+        </div>
+        <div id="page-dropdown"></div>
+        <button onclick="nextPage()" id="next-btn" title="Next">▶</button>
+    </div>
+    <div class="dropdown-backdrop" id="dropdown-backdrop" onclick="closeDropdown()"></div>
+    <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+        // ============ GLOBAL STATE ============
+        let currentPage = 1;
+        const totalPages = 18;
+        const pageNames = [
+            'Landing Page', 'Sign Up', 'Role Selection', 'Profile Setup', 'Skills & Experience',
+            'Portfolio & Verification', 'Worker Dashboard', 'Opportunity Notification', 'Opportunities Marketplace',
+            'Task Details & Proposal', 'Task Selected', 'Workspace & Chat', 'Active Task Progress',
+            'Payment Request', 'Payment Received', 'Ratings & Feedback', 'Earnings Dashboard',
+            'Public Worker Profile'
+        ];
+        const sidebarPageIds = [7, 8, 9, 10, 12, 13, 14, 17];
+        let signupMode = 'signup';
+        let selectedRole = 'worker';
+        let selectedSkills = ['React', 'Node.js', 'TypeScript'];
+        let availabilityOnline = true;
+        let countdownSeconds = 272;
+        let countdownInterval = null;
+        let opportunityResponded = null;
+        let selectedPaymentMethod = 'upi';
+        let paymentRequested = false;
+        let currentCategoryFilter = 'all';
+        let currentUrgencyFilter = 'all';
+        let currentSearch = '';
+
+        const faqAnswers = {
+            'How quickly can I expect a developer to respond?': 'Most matched developers respond within 15 minutes, and urgent tasks are surfaced first to active workers.',
+            'What payment methods are supported?': 'The platform supports UPI and Razorpay in this demo flow, with escrow-style approval before money is released.',
+            'How are developers verified?': 'Developers complete profile, skill, and identity steps before they can fully participate in the marketplace.',
+            'What if I\'m not satisfied with the work?': 'You can request changes before approving payment. The workflow keeps the task in review until both sides agree.',
+        };
+
+        const tasksData = [
+            { id: 1, title: 'Fix broken Stripe webhook handler', category: 'Backend', budget: '₹2,500–4,000',
+                urgency: 'URGENT', skills: ['Node.js', 'Stripe API', 'Webhooks'], client: 'Priya Mehta',
+                clientRating: '4.8', posted: '4 min ago' },
+            { id: 2, title: 'React dashboard performance optimization', category: 'Frontend', budget: '₹3,000–5,000',
+                urgency: 'HIGH', skills: ['React', 'TypeScript'], client: 'Rahul Gupta', clientRating: '4.7',
+                posted: '25 min ago' },
+            { id: 3, title: 'Deploy Next.js app on Vercel', category: 'DevOps', budget: '₹800–1,500', urgency: 'NORMAL',
+                skills: ['Next.js', 'DevOps'], client: 'Amit Kumar', clientRating: '4.5', posted: '1 hr ago' },
+            { id: 4, title: 'Fix WordPress plugin conflict', category: 'WordPress', budget: '₹1,000–2,000',
+                urgency: 'HIGH', skills: ['WordPress', 'PHP'], client: 'Vikram Shah', clientRating: '4.6',
+                posted: '45 min ago' },
+            { id: 5, title: 'Build REST API with FastAPI + PostgreSQL', category: 'Backend', budget: '₹5,000–8,000',
+                urgency: 'NORMAL', skills: ['Python', 'PostgreSQL'], client: 'Ananya Singh', clientRating: '4.9',
+                posted: '2 hrs ago' },
+            { id: 6, title: 'Debug React Native crash on Android', category: 'Mobile', budget: '₹2,000–3,500',
+                urgency: 'URGENT', skills: ['React Native', 'Android'], client: 'Aryan Mehta', clientRating: '4.4',
+                posted: '15 min ago' },
+            { id: 7, title: 'Set up CI/CD with GitHub Actions', category: 'DevOps', budget: '₹2,500–4,000',
+                urgency: 'NORMAL', skills: ['DevOps', 'GitHub'], client: 'Nisha Patel', clientRating: '4.8',
+                posted: '3 hrs ago' },
+            { id: 8, title: 'Integrate Razorpay UPI in Flutter', category: 'Mobile', budget: '₹1,500–3,000',
+                urgency: 'HIGH', skills: ['Flutter', 'Dart'], client: 'Karan Joshi', clientRating: '4.6',
+                posted: '1.5 hrs ago' },
+        ];
+
+        // ============ NAVIGATION ============
+        function navigateTo(pageNum) {
+            if (pageNum < 1 || pageNum > totalPages) return;
+            currentPage = pageNum;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'flex-page'));
+            const pageEl = document.getElementById('page-' + pageNum);
+            if (pageEl) {
+                const isFlex = pageEl.querySelector('.dashboard-layout') || pageEl.querySelector('.signup-page') || pageEl
+                    .querySelector('.setup-page');
+                pageEl.classList.add('active');
+                if (isFlex) pageEl.classList.add('flex-page');
+            }
+            updateDemoNav();
+            if (sidebarPageIds.includes(pageNum)) renderSidebar(pageNum);
+            if (pageNum === 8) startCountdown();
+            if (pageNum === 9) renderTasksTable();
+            if (pageNum === 16) renderStarCategories();
+            if (pageNum === 17) renderEarningsChart();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            closeDropdown();
+        }
+
+        function nextPage() { if (currentPage < totalPages) navigateTo(currentPage + 1); }
+
+        function prevPage() { if (currentPage > 1) navigateTo(currentPage - 1); }
+
+        function updateDemoNav() {
+            document.getElementById('current-page-label').textContent = currentPage + '. ' + pageNames[currentPage - 1];
+            document.getElementById('page-counter').textContent = currentPage + '/' + totalPages;
+            document.getElementById('prev-btn').disabled = currentPage === 1;
+            document.getElementById('next-btn').disabled = currentPage === totalPages;
+        }
+
+        function toggleDropdown() {
+            const dd = document.getElementById('page-dropdown');
+            const bd = document.getElementById('dropdown-backdrop');
+            const isOpen = dd.classList.contains('open');
+            if (isOpen) { closeDropdown(); return; }
+            let html = '';
+            for (let i = 1; i <= totalPages; i++) {
+                html +=
+                    `<div class="dropdown-row${i===currentPage?' active-row':''}" onclick="navigateTo(${i})">${String(i).padStart(2,'0')}. ${pageNames[i-1]}</div>`;
+            }
+            dd.innerHTML = html;
+            dd.classList.add('open');
+            bd.classList.add('open');
+        }
+
+        function closeDropdown() {
+            document.getElementById('page-dropdown').classList.remove('open');
+            document.getElementById('dropdown-backdrop').classList.remove('open');
+        }
+
+        function showToast(message, kind = 'info') {
+            const stack = document.getElementById('toast-stack');
+            if (!stack) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (kind !== 'info' ? ' ' + kind : '');
+            toast.textContent = message;
+            stack.appendChild(toast);
+            window.setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(8px)';
+                window.setTimeout(() => toast.remove(), 180);
+            }, 2600);
+        }
+
+        function setupFaqs() {
+            document.querySelectorAll('.faq-card').forEach(card => {
+                if (card.dataset.faqBound === 'true') return;
+                card.dataset.faqBound = 'true';
+                card.addEventListener('click', () => toggleFaq(card));
+            });
+        }
+
+        function toggleFaq(card) {
+            const question = card.querySelector('h4')?.textContent?.trim() || '';
+            const answer = faqAnswers[question] || 'This feature is available in the interactive demo flow.';
+            const answerEl = card.querySelector('.faq-answer');
+            const isOpen = card.classList.contains('open');
+            document.querySelectorAll('.faq-card.open').forEach(openCard => {
+                if (openCard !== card) {
+                    openCard.classList.remove('open');
+                    const openAnswer = openCard.querySelector('.faq-answer');
+                    if (openAnswer) openAnswer.textContent = '';
+                }
+            });
+            if (isOpen) {
+                card.classList.remove('open');
+                if (answerEl) answerEl.textContent = '';
+                return;
+            }
+            card.classList.add('open');
+            if (answerEl) answerEl.textContent = answer;
+        }
+
+        function setupSocialButtons() {
+            document.querySelectorAll('.social-btn').forEach(button => {
+                if (button.dataset.socialBound === 'true') return;
+                button.dataset.socialBound = 'true';
+                button.addEventListener('click', () => {
+                    showToast(button.textContent.trim() + ' sign-in is ready in the demo flow.', 'success');
+                });
+            });
+        }
+
+        function setupFileUpload() {
+            const input = document.getElementById('file-input');
+            const preview = document.getElementById('profile-photo-preview');
+            const copy = document.getElementById('photo-upload-copy');
+            if (!input || input.dataset.bound === 'true') return;
+            input.dataset.bound = 'true';
+            input.addEventListener('change', () => {
+                const file = input.files && input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = event => {
+                    if (preview) {
+                        preview.src = event.target.result;
+                        preview.style.display = 'block';
+                    }
+                    if (copy) copy.style.display = 'none';
+                    showToast('Profile photo updated.', 'success');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function setupEarningsActions() {
+            const exportButton = document.getElementById('export-csv-btn');
+            if (exportButton && exportButton.dataset.bound !== 'true') {
+                exportButton.dataset.bound = 'true';
+                exportButton.addEventListener('click', exportEarningsCsv);
+            }
+            const withdrawButton = document.getElementById('withdraw-earnings-btn');
+            if (withdrawButton && withdrawButton.dataset.bound !== 'true') {
+                withdrawButton.dataset.bound = 'true';
+                withdrawButton.addEventListener('click', () => {
+                    showToast('Withdrawal requested for your available balance.', 'success');
+                });
+            }
+        }
+
+        function exportEarningsCsv() {
+            const rows = [...document.querySelectorAll('#page-17 .data-table tbody tr')];
+            if (!rows.length) {
+                showToast('No transactions found to export.', 'warning');
+                return;
+            }
+            const csvRows = [['Transaction ID', 'Task', 'Client', 'Amount', 'Method', 'Date']];
+            rows.forEach(row => {
+                const cells = [...row.querySelectorAll('td')].map(cell => cell.textContent.replace(/\s+/g, ' ').trim());
+                csvRows.push(cells);
+            });
+            const csv = csvRows.map(columns => columns.map(value => '"' + value.replace(/"/g, '""') + '"').join(',')).join('\r\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'sidequest-earnings.csv';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            showToast('CSV export downloaded.', 'success');
+        }
+
+        function setupInteractiveFeatures() {
+            setupFaqs();
+            setupSocialButtons();
+            setupFileUpload();
+            setupEarningsActions();
+            const reviewButton = document.getElementById('submit-review-btn');
+            if (reviewButton) reviewButton.disabled = true;
+        }
+
+        function renderSidebar(pageNum) {
+            const sidebarIds = ['sidebar', 'sidebar-8', 'sidebar-9', 'sidebar-10', 'sidebar-12', 'sidebar-13',
+                'sidebar-14', 'sidebar-17'
+            ];
+            sidebarIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = `
+                <div class="sidebar-logo"><span class="zap-icon">⚡</span> SideQuest</div>
+                <div class="sidebar-availability"><span class="pulsing-dot dot-green"></span> ONLINE</div>
+                <nav class="sidebar-nav">
+                  <a onclick="navigateTo(7)" class="${pageNum===7?'active-nav':''}">📊 Dashboard</a>
+                  <a onclick="navigateTo(9)" class="${pageNum===9?'active-nav':''}">🔍 Opportunities</a>
+                  <a onclick="navigateTo(13)" class="${pageNum===13?'active-nav':''}">📋 Active Tasks</a>
+                  <a onclick="navigateTo(12)" class="${pageNum===12?'active-nav':''}">💬 Messages</a>
+                  <a onclick="navigateTo(17)" class="${pageNum===17?'active-nav':''}">💰 Earnings</a>
+                  <a onclick="navigateTo(18)" class="${pageNum===18?'active-nav':''}">👤 Profile</a>
+                  <a>⚙️ Settings</a>
+                </nav>
+                <div class="sidebar-footer">
+                  <div class="avatar">AR</div>
+                  <div class="user-info"><div class="user-name">Arjun Sharma</div><div class="user-title">Full Stack Developer</div></div>
+                  <span style="cursor:pointer;">🚪</span>
+                </div>`;
+            });
+        }
+
+        // ============ SIGNUP ============
+        function setSignupMode(mode) {
+            signupMode = mode;
+            document.getElementById('mode-signup').classList.toggle('active-mode', mode === 'signup');
+            document.getElementById('mode-signin').classList.toggle('active-mode', mode === 'signin');
+            document.getElementById('form-heading').textContent = mode === 'signup' ? 'Create your account' :
+                'Welcome back';
+            document.getElementById('form-subtitle').textContent = mode === 'signup' ?
+                'Join 2,400+ developers already on SideQuest' : 'Sign in to your SideQuest account';
+            document.getElementById('group-fullname').style.display = mode === 'signup' ? 'block' : 'none';
+            document.getElementById('group-phone').style.display = mode === 'signup' ? 'block' : 'none';
+            document.getElementById('submit-btn').textContent = mode === 'signup' ? 'Create Account →' : 'Sign In →';
+        }
+
+        function handleSignup() { navigateTo(3); }
+
+        function togglePassword() {
+            const pw = document.getElementById('input-password');
+            pw.type = pw.type === 'password' ? 'text' : 'password';
+        }
+
+        // ============ ROLE SELECTION ============
+        function selectRole(role) {
+            selectedRole = role;
+            document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('role-' + role).classList.add('selected');
+            const labels = { client: 'Continue as Client', worker: 'Continue as Worker', both: 'Continue with Both' };
+            document.getElementById('role-continue-btn').textContent = labels[role];
+        }
+
+        // ============ PROFILE SETUP ============
+        function selectTitleChip(chip) {
+            document.querySelectorAll('#title-chips .chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            document.getElementById('custom-title').value = '';
+        }
+
+        function updateCharCount() {
+            const len = document.getElementById('bio-input').value.length;
+            document.getElementById('char-count').textContent = len;
+        }
+
+        // ============ SKILLS ============
+        function toggleSkill(chip) {
+            chip.classList.toggle('selected');
+            const skill = chip.textContent.trim();
+            if (chip.classList.contains('selected')) {
+                if (!selectedSkills.includes(skill)) selectedSkills.push(skill);
+            } else {
+                selectedSkills = selectedSkills.filter(s => s !== skill);
+            }
+            updateSelectedSkillsDisplay();
+        }
+
+        function updateSelectedSkillsDisplay() {
+            document.getElementById('selected-skills-count').textContent = selectedSkills.length;
+            const display = document.getElementById('selected-skills-display');
+            if (display) display.innerHTML = selectedSkills.map(s =>
+                `<span class="chip selected" style="font-size:0.7rem;">${s} ×</span>`).join('');
+        }
+
+        function selectExp(btn) {
+            btn.parentElement.querySelectorAll('.exp-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function toggleAvail(btn) { btn.classList.toggle('selected'); }
+
+        // ============ DASHBOARD ============
+        function toggleAvailability() {
+            availabilityOnline = !availabilityOnline;
+            const sw = document.getElementById('avail-switch');
+            const label = document.getElementById('avail-label');
+            if (availabilityOnline) {
+                sw.classList.add('on');
+                label.textContent = 'ONLINE';
+                label.style.color = '#059669';
+            } else {
+                sw.classList.remove('on');
+                label.textContent = 'OFFLINE';
+                label.style.color = '#94A3B8';
+            }
+        }
+
+        // ============ COUNTDOWN (PAGE 8) ============
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (opportunityResponded) return;
+            countdownSeconds = 272;
+            updateCountdownDisplay();
+            countdownInterval = setInterval(() => {
+                if (opportunityResponded) { clearInterval(countdownInterval); return; }
+                countdownSeconds--;
+                if (countdownSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownSeconds = 0;
+                }
+                updateCountdownDisplay();
+            }, 1000);
+        }
+
+        function updateCountdownDisplay() {
+            const mins = Math.floor(countdownSeconds / 60);
+            const secs = countdownSeconds % 60;
+            const display = document.getElementById('countdown-display');
+            const banner = document.getElementById('countdown-banner');
+            const fill = document.getElementById('countdown-fill');
+            if (display) display.textContent = mins + ':' + String(secs).padStart(2, '0');
+            if (fill) fill.style.width = (countdownSeconds / 272 * 100) + '%';
+            if (countdownSeconds < 60 && banner) {
+                banner.classList.add('urgent-countdown');
+                if (display) display.classList.add('urgent-countdown');
+                if (fill) fill.classList.add('urgent-countdown');
+            }
+        }
+
+        function acceptOpportunity() {
+            opportunityResponded = 'interested';
+            if (countdownInterval) clearInterval(countdownInterval);
+            document.getElementById('action-buttons').style.display = 'none';
+            const pr = document.getElementById('post-response');
+            pr.style.display = 'block';
+            pr.innerHTML =
+                '<div style="font-size:3rem;">✅</div><h2>Interest Sent!</h2><p style="color:var(--text-secondary);">Redirecting...</p>';
+            setTimeout(() => navigateTo(11), 1500);
+        }
+
+        function declineOpportunity() {
+            opportunityResponded = 'declined';
+            if (countdownInterval) clearInterval(countdownInterval);
+            document.getElementById('action-buttons').style.display = 'none';
+            const pr = document.getElementById('post-response');
+            pr.style.display = 'block';
+            pr.innerHTML =
+                '<div style="font-size:3rem;">❌</div><h2>Opportunity Passed</h2><p style="color:var(--text-secondary);">Going back to dashboard...</p>';
+            setTimeout(() => navigateTo(7), 1500);
+        }
+
+        // ============ TASKS TABLE (PAGE 9) ============
+        function filterTasks() {
+            currentSearch = document.getElementById('task-search').value.toLowerCase();
+            currentUrgencyFilter = document.getElementById('urgency-filter').value;
+            renderTasksTable();
+        }
+
+        function setCategoryFilter(cat, btn) {
+            currentCategoryFilter = cat;
+            document.querySelectorAll('#category-tabs .category-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderTasksTable();
+        }
+
+        function renderTasksTable() {
+            let filtered = tasksData.filter(t => {
+                const matchSearch = !currentSearch || t.title.toLowerCase().includes(currentSearch) || t
+                    .skills.some(s => s.toLowerCase().includes(currentSearch));
+                const matchUrgency = currentUrgencyFilter === 'all' || t.urgency === currentUrgencyFilter;
+                const matchCategory = currentCategoryFilter === 'all' || t.category === currentCategoryFilter;
+                return matchSearch && matchUrgency && matchCategory;
+            });
+            const tbody = document.getElementById('tasks-tbody');
+            const empty = document.getElementById('empty-state');
+            if (filtered.length === 0) {
+                if (tbody) tbody.innerHTML = '';
+                if (empty) empty.style.display = 'block';
+            } else {
+                if (empty) empty.style.display = 'none';
+                if (tbody) tbody.innerHTML = filtered.map(t => `
+                <tr>
+                  <td><strong>${t.title}</strong><br><small style="color:var(--text-muted);">${t.category}</small></td>
+                  <td><strong>${t.budget}</strong></td>
+                  <td><span class="urgency-badge urgency-${t.urgency.toLowerCase()}">${t.urgency}</span></td>
+                  <td>${t.skills.map(s=>`<span class="chip chip-sm">${s}</span>`).join(' ')}</td>
+                  <td>⭐ ${t.clientRating}</td>
+                  <td>${t.posted}</td>
+                  <td><button class="btn btn-primary btn-sm" onclick="navigateTo(10)">View →</button></td>
+                </tr>`).join('');
+            }
+        }
+
+        // ============ PROPOSAL (PAGE 10) ============
+        function submitProposal() {
+            document.getElementById('proposal-form-card').style.display = 'none';
+            const success = document.getElementById('proposal-success');
+            success.style.display = 'block';
+            setTimeout(() => navigateTo(11), 2000);
+        }
+
+        // ============ CHAT (PAGE 12) ============
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            const container = document.getElementById('chat-messages');
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble worker';
+            bubble.innerHTML = '<strong>You</strong><br>' + msg;
+            container.appendChild(bubble);
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ============ PROGRESS (PAGE 13) ============
+        function toggleMilestone(cb) {
+            const item = cb.parentElement;
+            item.classList.toggle('done', cb.checked);
+            updateProgressBar();
+        }
+
+        function updateProgress() {
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const checkboxes = document.querySelectorAll('#page-13 .milestone-item input[type="checkbox"]');
+            if (checkboxes.length === 0) return;
+            const done = Array.from(checkboxes).filter(c => c.checked).length;
+            const pct = Math.round((done / checkboxes.length) * 100);
+            const fill = document.getElementById('progress-fill');
+            if (fill) fill.style.width = pct + '%';
+            const label = document.querySelector('#page-13 .progress-bar-wrap');
+            if (label && label.previousElementSibling) {
+                const pctSpan = label.previousElementSibling.querySelector('span:last-child');
+                if (pctSpan) pctSpan.textContent = pct + '%';
+            }
+        }
+
+        function addNote() {
+            const input = document.getElementById('note-input');
+            if (!input || !input.value.trim()) return;
+            const card = document.querySelector('#page-13 .card:last-child');
+            const noteEl = document.createElement('div');
+            noteEl.style.cssText =
+                'font-size:0.85rem;padding:0.5rem;background:#F8FAFC;border-radius:var(--radius);margin-bottom:0.5rem;';
+            noteEl.innerHTML =
+                '<small style="color:var(--text-muted);">Just now · Arjun Sharma</small><p>' + input.value + '</p>';
+            const textarea = card.querySelector('textarea');
+            if (textarea) textarea.parentNode.insertBefore(noteEl, textarea);
+            input.value = '';
+        }
+
+        // ============ PAYMENT (PAGE 14) ============
+        function selectPaymentMethod(method, el) {
+            selectedPaymentMethod = method;
+            el.parentElement.querySelectorAll('.payment-method-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function requestPayment() {
+            paymentRequested = true;
+            document.getElementById('request-section').style.display = 'none';
+            document.getElementById('waiting-section').style.display = 'block';
+        }
+
+        // ============ RATINGS (PAGE 16) ============
+        let ratingsState = { overall: 0, communication: 0, payment: 0, clarity: 0 };
+        let hoveredCategory = null;
+        let hoveredStar = 0;
+
+        function renderStarCategories() {
+            const container = document.getElementById('star-categories');
+            if (!container) return;
+            const categories = [
+                { key: 'overall', label: 'Overall Experience' },
+                { key: 'communication', label: 'Communication' },
+                { key: 'payment', label: 'Payment Promptness' },
+                { key: 'clarity', label: 'Task Clarity' },
+            ];
+            const labels = ['Poor', 'Fair', 'Good', 'Great', 'Excellent'];
+            container.innerHTML = categories.map(c => `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid #F1F5F9;">
+              <span style="font-weight:500;font-size:0.9rem;">${c.label}</span>
+              <div style="display:flex;align-items:center;gap:0.3rem;">
+                <span style="font-size:0.8rem;color:var(--text-muted);min-width:70px;text-align:right;" id="label-${c.key}">${labels[ratingsState[c.key]]||'Tap to rate'}</span>
+                ${[1,2,3,4,5].map(s=>`
+                  <button class="star-btn${s<=(hoveredCategory===c.key?hoveredStar:ratingsState[c.key])?' filled':''}"
+                    onmouseenter="hoverStar('${c.key}',${s})"
+                    onmouseleave="hoverStar(null,0)"
+                    onclick="setRating('${c.key}',${s})">★</button>`).join('')}
+              </div>
+            </div>`).join('');
+        }
+
+        function hoverStar(cat, star) {
+            hoveredCategory = cat;
+            hoveredStar = star;
+            renderStarCategories();
+        }
+
+        function setRating(cat, star) {
+            ratingsState[cat] = star;
+            hoveredCategory = null;
+            hoveredStar = 0;
+            renderStarCategories();
+            document.getElementById('submit-review-btn').disabled = ratingsState.overall === 0;
+        }
+
+        function toggleTag(tag, type) {
+            tag.classList.toggle('selected');
+            if (type === 'positive' && tag.classList.contains('selected')) {
+                tag.style.background = '#D1FAE5';
+                tag.style.color = '#065F46';
+                tag.style.borderColor = '#10B981';
+            } else if (type === 'negative' && tag.classList.contains('selected')) {
+                tag.style.background = '#FEE2E2';
+                tag.style.color = '#991B1B';
+                tag.style.borderColor = '#DC2626';
+            } else {
+                tag.style.background = '';
+                tag.style.color = '';
+                tag.style.borderColor = '';
+            }
+        }
+
+        function submitReview() {
+            if (ratingsState.overall === 0) return;
+            document.querySelector('#page-16 .card') && (document.querySelector('#page-16').querySelectorAll('.card')
+                .forEach(c => c.style.display = 'none'));
+            document.getElementById('submit-review-btn').style.display = 'none';
+            document.getElementById('review-success').style.display = 'block';
+            setTimeout(() => navigateTo(7), 2000);
+        }
+
+        // ============ EARNINGS CHART (PAGE 17) ============
+        function renderEarningsChart() {
+            const container = document.getElementById('earnings-chart');
+            if (!container) return;
+            const data = [
+                { month: 'Jan', earnings: 8200 }, { month: 'Feb', earnings: 11500 }, { month: 'Mar',
+                earnings: 9800 },
+                { month: 'Apr', earnings: 14200 }, { month: 'May', earnings: 15000 }, { month: 'Jun',
+                earnings: 18200 }
+            ];
+            // Simple SVG chart fallback since Recharts CDN might not load perfectly
+            const maxVal = 20000;
+            const w = container.clientWidth || 500;
+            const h = 250;
+            const pad = { top: 20, right: 20, bottom: 35, left: 50 };
+            const chartW = w - pad.left - pad.right;
+            const chartH = h - pad.top - pad.bottom;
+            let svgHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+            // Y axis labels
+            for (let i = 0; i <= 4; i++) {
+                const val = (maxVal / 4) * i;
+                const y = pad.top + chartH - (val / maxVal) * chartH;
+                svgHTML +=
+                    `<text x="${pad.left-8}" y="${y+4}" text-anchor="end" font-size="11" fill="#94A3B8" font-family="Inter,sans-serif">₹${val/1000}k</text>`;
+                svgHTML +=
+                    `<line x1="${pad.left}" y1="${y}" x2="${w-pad.right}" y2="${y}" stroke="#E2E8F0" stroke-width="1"/>`;
+            }
+            // Area path
+            let areaPath = '';
+            let linePath = '';
+            data.forEach((d, i) => {
+                const x = pad.left + (i / (data.length - 1)) * chartW;
+                const y = pad.top + chartH - (d.earnings / maxVal) * chartH;
+                if (i === 0) { areaPath += `M${x},${pad.top+chartH} L${x},${y}`;
+                    linePath += `M${x},${y}`; } else { areaPath += ` L${x},${y}`;
+                    linePath += ` L${x},${y}`; }
+                if (i === data.length - 1) areaPath += ` L${x},${pad.top+chartH} Z`;
+            });
+            svgHTML +=
+                `<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4338CA" stop-opacity="0.25"/><stop offset="100%" stop-color="#4338CA" stop-opacity="0"/></linearGradient></defs>`;
+            svgHTML += `<path d="${areaPath}" fill="url(#areaGrad)"/>`;
+            svgHTML +=
+                `<path d="${linePath}" fill="none" stroke="#4338CA" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+            // Dots and X labels
+            data.forEach((d, i) => {
+                const x = pad.left + (i / (data.length - 1)) * chartW;
+                const y = pad.top + chartH - (d.earnings / maxVal) * chartH;
+                svgHTML += `<circle cx="${x}" cy="${y}" r="5" fill="#fff" stroke="#4338CA" stroke-width="2.5"/>`;
+                svgHTML +=
+                    `<text x="${x}" y="${h-pad.bottom+18}" text-anchor="middle" font-size="11" fill="#94A3B8" font-family="Inter,sans-serif">${d.month}</text>`;
+            });
+            svgHTML += '</svg>';
+            container.innerHTML = svgHTML;
+        }
+
+        // ============ INIT ============
+        function init() {
+            updateDemoNav();
+            document.getElementById('prev-btn').disabled = true;
+            renderSidebar(7);
+            updateSelectedSkillsDisplay();
+            setupInteractiveFeatures();
+            // Set default star rating labels
+            if (document.getElementById('star-categories')) renderStarCategories();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+        window.addEventListener('resize', () => { if (currentPage === 17) renderEarningsChart(); });
+    </script>
+</body>
+</html>
