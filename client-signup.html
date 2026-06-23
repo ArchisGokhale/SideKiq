@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Become a Client — SideKiq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<script>
+  (function(){
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  })();
+</script>
+<style>
+  /* ===================== Tokens (shared with sidekiq.com) ===================== */
+  :root{
+    --purple: #5B3FD6;
+    --purple-600: #4F35BD;
+    --purple-tint: rgba(91,63,214,0.08);
+    --purple-tint-strong: rgba(91,63,214,0.16);
+    --orange: #FF9F43;
+    --orange-600: #F0892A;
+    --orange-tint: rgba(255,159,67,0.14);
+    --orange-tint-strong: rgba(255,159,67,0.22);
+
+    --bg: #F8F5EF;
+    --card: #FFFFFF;
+    --border: #E8E9EE;
+    --text: #1B1C24;
+    --text-soft: #6D7081;
+
+    --shadow-xs: 0 1px 2px rgba(27,28,36,0.05);
+    --shadow-sm: 0 4px 14px rgba(27,28,36,0.06);
+    --shadow-md: 0 10px 30px rgba(27,28,36,0.08);
+    --shadow-lg: 0 24px 60px rgba(27,28,36,0.14);
+
+    --r-sm: 12px; --r-md: 18px; --r-lg: 24px; --r-pill: 999px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+  [data-theme="dark"]{
+    --bg: #101116; --card: #1A1B23; --border: #2A2D36;
+    --text: #F8F8FA; --text-soft: #A0A4B8;
+    --purple-tint: rgba(91,63,214,0.18); --purple-tint-strong: rgba(91,63,214,0.28);
+    --orange-tint: rgba(255,159,67,0.15); --orange-tint-strong: rgba(255,159,67,0.25);
+    --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-sm: 0 4px 16px rgba(0,0,0,0.35);
+    --shadow-md: 0 12px 32px rgba(0,0,0,0.45);
+    --shadow-lg: 0 28px 70px rgba(0,0,0,0.55);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+    transition:background-color .45s var(--ease), color .45s var(--ease);
+    min-height:100vh;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; background:none; border:none; color:inherit; }
+  :focus-visible{ outline:2px solid var(--purple); outline-offset:3px; border-radius:6px; }
+  h1,h2,h3{ font-weight:800; letter-spacing:-0.02em; line-height:1.1; }
+  p{ color:var(--text-soft); }
+
+  .container-narrow{ max-width:640px; margin:0 auto; padding:0 24px; }
+
+  /* ===================== Logo & misc shared ===================== */
+  .logo{ font-weight:800; font-size:1.25rem; letter-spacing:-0.01em; }
+  .logo .side{ color:var(--purple); }
+  .logo .kiq{ color:var(--orange); font-style:italic; }
+
+  .theme-toggle{
+    position:relative; width:48px; height:28px; border-radius:var(--r-pill);
+    background:var(--border); flex-shrink:0; transition:background-color .35s var(--ease);
+  }
+  .theme-toggle .thumb{
+    position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%;
+    background:var(--card); box-shadow:var(--shadow-xs);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .35s var(--ease), background-color .35s var(--ease);
+  }
+  [data-theme="dark"] .theme-toggle .thumb{ transform:translateX(20px); background:var(--purple); }
+  .theme-toggle svg{ width:13px; height:13px; position:absolute; transition:opacity .3s var(--ease), transform .3s var(--ease); }
+  .theme-toggle .icon-sun{ color:var(--orange-600); opacity:1; }
+  .theme-toggle .icon-moon{ color:#fff; opacity:0; transform:scale(.5) rotate(-40deg); }
+  [data-theme="dark"] .theme-toggle .icon-sun{ opacity:0; transform:scale(.5) rotate(40deg); }
+  [data-theme="dark"] .theme-toggle .icon-moon{ opacity:1; transform:scale(1) rotate(0); }
+
+  /* ===================== Buttons ===================== */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:14px 28px; border-radius:var(--r-pill); font-weight:600; font-size:.95rem;
+    border:1.5px solid transparent; white-space:nowrap;
+    transition:transform .25s var(--ease), box-shadow .25s var(--ease), background-color .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), opacity .2s;
+  }
+  .btn:active{ transform:translateY(0) scale(.98); }
+  .btn-primary{ background:var(--purple); color:#fff; box-shadow:0 1px 2px rgba(91,63,214,.35), 0 8px 20px rgba(91,63,214,.18); }
+  .btn-primary:hover{ background:var(--purple-600); transform:translateY(-2px); box-shadow:0 2px 4px rgba(91,63,214,.4), 0 14px 28px rgba(91,63,214,.28); }
+  .btn-primary[disabled]{ opacity:.45; box-shadow:none; cursor:not-allowed; pointer-events:none; }
+  .btn-ghost{ background:transparent; border-color:var(--border); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--purple); color:var(--purple); background:var(--purple-tint); }
+  .btn-block{ width:100%; }
+  .btn-lg{ padding:16px 30px; font-size:1rem; }
+  .btn-sm{ padding:9px 18px; font-size:.85rem; }
+
+  /* ===================== Flow header ===================== */
+  .flow-nav{
+    position:sticky; top:0; z-index:50;
+    background:color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    transition:background-color .45s var(--ease), border-color .45s var(--ease);
+  }
+  .flow-nav.is-cover{ border-bottom-color:transparent; background:transparent; }
+  .flow-nav-top{ display:flex; align-items:center; justify-content:space-between; height:72px; }
+  .progress-wrap{ padding-bottom:16px; }
+  .progress-row{ display:flex; align-items:center; gap:12px; }
+  .back-btn{
+    width:36px; height:36px; border-radius:50%; border:1.5px solid var(--border); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; transition:transform .2s, border-color .2s, color .2s;
+  }
+  .back-btn svg{ width:16px; height:16px; }
+  .back-btn:hover{ border-color:var(--purple); color:var(--purple); }
+  .back-btn[disabled]{ opacity:.3; pointer-events:none; }
+  .progress-track{ flex:1; height:6px; border-radius:999px; background:var(--border); overflow:hidden; }
+  .progress-fill{ height:100%; width:10%; background:var(--purple); border-radius:999px; transition:width .45s var(--ease); }
+  .progress-label{ font-size:.78rem; font-weight:700; color:var(--text-soft); flex-shrink:0; width:42px; text-align:right; }
+  .step-name{ font-size:.78rem; font-weight:600; color:var(--text-soft); margin-top:8px; text-align:right; }
+
+  /* ===================== Main / panels ===================== */
+  .flow-main{ padding:48px 24px 96px; }
+  .panel{ max-width:600px; margin:0 auto; display:none; }
+  .panel.active{ display:block; animation:panelIn .5s var(--ease); }
+  @keyframes panelIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+
+  .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:48px; box-shadow:var(--shadow-sm); }
+
+  .step-icon{
+    width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px; background:var(--purple-tint); color:var(--purple);
+  }
+  .step-icon svg{ width:26px; height:26px; }
+  .step-icon.is-orange{ background:var(--orange-tint); color:var(--orange-600); }
+  [data-theme="dark"] .step-icon.is-orange{ color:var(--orange); }
+
+  .step-eyebrow{ font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-soft); margin-bottom:10px; }
+  .panel h2{ font-size:clamp(1.5rem,2.6vw,1.9rem); margin-bottom:10px; }
+  .panel .lead{ font-size:.98rem; line-height:1.6; margin-bottom:32px; }
+
+  .hint{ font-size:.82rem; color:var(--orange-600); margin-top:8px; display:none; align-items:center; gap:6px; }
+  [data-theme="dark"] .hint{ color:var(--orange); }
+  .hint.show{ display:flex; }
+  .hint svg{ width:14px; height:14px; flex-shrink:0; }
+
+  .panel-actions{ display:flex; justify-content:space-between; align-items:center; margin-top:36px; gap:12px; }
+  .panel-actions.center{ justify-content:center; }
+
+  /* ===================== Form fields ===================== */
+  .field{ margin-bottom:22px; }
+  .field label{ display:block; font-size:.85rem; font-weight:700; margin-bottom:8px; }
+  .field .sub{ font-size:.8rem; color:var(--text-soft); margin-top:6px; }
+  .field input[type=text], .field input[type=email], .field input[type=tel], .field input[type=url],
+  .field textarea, .field select{
+    width:100%; padding:13px 16px; border-radius:var(--r-sm); border:1.5px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:.95rem; font-family:inherit;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .field select{ appearance:auto; }
+  .field input::placeholder, .field textarea::placeholder{ color:var(--text-soft); opacity:.7; }
+  .field input:focus, .field textarea:focus, .field select:focus{ border-color:var(--purple); box-shadow:0 0 0 4px var(--purple-tint); outline:none; }
+  .field textarea{ resize:vertical; min-height:96px; }
+
+  /* chips */
+  .chip-group{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{
+    padding:10px 16px; border-radius:var(--r-pill); border:1.5px solid var(--border);
+    font-size:.85rem; font-weight:600; color:var(--text-soft); background:var(--card);
+    transition:transform .2s, border-color .2s, background-color .2s, color .2s;
+  }
+  .chip:hover{ border-color:var(--purple); }
+  .chip.active{ background:var(--purple); border-color:var(--purple); color:#fff; transform:translateY(-1px); }
+
+  /* choice cards */
+  .choice-card{
+    display:flex; align-items:center; gap:14px; padding:16px 18px; border:1.5px solid var(--border);
+    border-radius:var(--r-md); cursor:pointer; background:var(--card); margin-bottom:12px;
+    transition:transform .2s var(--ease), border-color .2s, background-color .2s;
+  }
+  .choice-card:hover{ transform:translateY(-2px); border-color:var(--purple); }
+  .choice-card.selected{ border-color:var(--purple); background:var(--purple-tint); }
+  .choice-card .cc-icon{
+    width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    background:var(--bg); flex-shrink:0; border:1px solid var(--border);
+  }
+  .choice-card .cc-icon svg{ width:18px; height:18px; }
+  .choice-card .cc-text{ flex:1; }
+  .choice-card .cc-text strong{ display:block; font-size:.95rem; font-weight:700; }
+  .choice-card .cc-text span{ font-size:.8rem; color:var(--text-soft); }
+  .choice-card .cc-check{
+    width:22px; height:22px; border-radius:50%; border:1.5px solid var(--border); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; transition:background-color .2s, border-color .2s, transform .2s;
+  }
+  .choice-card.selected .cc-check{ background:var(--purple); border-color:var(--purple); transform:scale(1.05); }
+  .choice-card .cc-check svg{ width:12px; height:12px; color:#fff; opacity:0; transition:opacity .15s; }
+  .choice-card.selected .cc-check svg{ opacity:1; }
+
+  .inline-reveal{ display:none; margin-top:14px; }
+  .inline-reveal.show{ display:block; animation:panelIn .35s var(--ease); }
+  .skip-link{ font-size:.85rem; font-weight:600; color:var(--text-soft); transition:color .2s; }
+  .skip-link:hover{ color:var(--purple); text-decoration:underline; }
+
+  /* switches */
+  .switch-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 0; border-bottom:1px solid var(--border); }
+  .switch-row:last-child{ border-bottom:none; }
+  .switch-row .sr-text strong{ display:block; font-size:.92rem; font-weight:700; margin-bottom:3px; }
+  .switch-row .sr-text span{ font-size:.82rem; color:var(--text-soft); }
+  .switch{ position:relative; width:46px; height:27px; border-radius:999px; background:var(--border); flex-shrink:0; transition:background-color .25s; }
+  .switch .sw-thumb{ position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%; background:var(--card); box-shadow:var(--shadow-xs); transition:transform .25s var(--ease); }
+  .switch.on{ background:var(--purple); }
+  .switch.on .sw-thumb{ transform:translateX(19px); }
+
+  /* verification */
+  .verify-card{ display:flex; align-items:center; gap:16px; padding:18px; border:1.5px solid var(--border); border-radius:var(--r-md); margin-bottom:14px; }
+  .verify-card .vc-icon{ width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:var(--bg); border:1px solid var(--border); flex-shrink:0; }
+  .verify-card .vc-icon svg{ width:19px; height:19px; color:var(--text-soft); }
+  .verify-card .vc-text{ flex:1; min-width:0; }
+  .verify-card .vc-text strong{ font-size:.92rem; display:block; }
+  .verify-card .vc-text span{ font-size:.8rem; color:var(--text-soft); }
+  .status-badge{ font-size:.74rem; font-weight:700; padding:6px 12px; border-radius:999px; flex-shrink:0; display:flex; align-items:center; gap:5px; white-space:nowrap; }
+  .status-badge.pending{ background:var(--orange-tint); color:var(--orange-600); }
+  [data-theme="dark"] .status-badge.pending{ color:var(--orange); }
+  .status-badge.verified{ background:var(--purple-tint); color:var(--purple); }
+  .status-badge svg{ width:11px; height:11px; }
+  .verify-inline{ display:none; padding:0 18px 18px; margin-top:-14px; }
+  .verify-inline.show{ display:block; }
+  .verify-inline .row{ display:flex; gap:10px; margin-top:10px; }
+  .verify-inline input{ flex:1; padding:11px 14px; border-radius:var(--r-sm); border:1.5px solid var(--border); background:var(--bg); color:var(--text); font-size:.9rem; }
+  .verify-inline input:focus{ border-color:var(--purple); outline:none; }
+  .spin{ width:14px; height:14px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* cover */
+  .cover{ min-height:calc(100vh - 72px); display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .cover-inner{ max-width:520px; text-align:center; }
+  .cover-badge{
+    width:72px; height:72px; border-radius:20px; background:var(--purple-tint); color:var(--purple);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 28px;
+  }
+  .cover-badge svg{ width:32px; height:32px; }
+  .cover h1{ font-size:clamp(2rem,4vw,2.6rem); margin-bottom:16px; }
+  .cover .lead{ font-size:1.05rem; margin-bottom:36px; }
+  .mini-stack{ display:flex; justify-content:center; margin-bottom:36px; }
+  .mini-stack span{
+    width:54px; height:54px; border-radius:14px; border:2px solid var(--bg); margin-left:-14px;
+    display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);
+  }
+  .mini-stack span:first-child{ margin-left:0; }
+  .mini-stack span svg{ width:22px; height:22px; }
+
+  .summary-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:28px; margin:32px 0; text-align:left; }
+  .summary-row{ display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+  .summary-avatar{ width:52px; height:52px; border-radius:50%; background:var(--purple); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; overflow:hidden; }
+  .summary-avatar img{ width:100%; height:100%; object-fit:cover; }
+  .summary-row strong{ display:block; font-size:1.05rem; }
+  .summary-row span{ font-size:.85rem; color:var(--text-soft); }
+  .summary-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .summary-chip{ font-size:.78rem; font-weight:700; padding:6px 12px; border-radius:999px; background:var(--orange-tint); color:var(--orange-600); }
+  [data-theme="dark"] .summary-chip{ color:var(--orange); }
+
+  .draw-check{ stroke-dasharray:30; stroke-dashoffset:30; transition:stroke-dashoffset .6s var(--ease) .1s; }
+  .cover-badge.in-view .draw-check{ stroke-dashoffset:0; }
+
+  /* responsive */
+  @media (max-width: 640px){
+    .card{ padding:32px 24px; }
+    .cat-select-grid{ grid-template-columns:repeat(2,1fr); }
+    .check-grid{ grid-template-columns:1fr; }
+    .hours-grid{ grid-template-columns:1fr; }
+    .avatar-upload{ flex-direction:column; text-align:center; }
+    .exp-row{ flex-direction:column; align-items:flex-start; }
+    .segmented{ width:100%; }
+    .segmented button{ flex:1; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition-duration:.001ms !important; animation-duration:.001ms !important; }
+    .draw-check{ transition:none; stroke-dashoffset:0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="flow-nav" id="flowNav">
+  <div class="container-narrow flow-nav-top">
+    <a href="#" class="logo"><span class="side">Side</span><span class="kiq">Kiq</span></a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" aria-pressed="false">
+      <span class="thumb">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5z"/></svg>
+      </span>
+    </button>
+  </div>
+  <div class="container-narrow progress-wrap" id="progressWrap">
+    <div class="progress-row">
+      <button class="back-btn" id="backBtn" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-label" id="progressLabel">1/8</span>
+    </div>
+    <div class="step-name" id="stepName">Sign in</div>
+  </div>
+</header>
+
+<main class="flow-main">
+
+  <!-- ============ 0. WELCOME ============ -->
+  <section class="panel" data-step="welcome">
+    <div class="cover">
+      <div class="cover-inner">
+        <div class="mini-stack" aria-hidden="true">
+          <span style="background:var(--purple-tint); color:var(--purple);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3l5 5-11 11H5v-5z"/></svg></span>
+          <span style="background:var(--orange-tint); color:var(--orange-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/></svg></span>
+          <span style="background:var(--purple-tint); color:var(--purple);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.4L18 9l-4.2 1.6L12 15l-1.8-4.4L6 9l4.2-1.6z"/></svg></span>
+        </div>
+        <h1>Find the perfect <em style="color:var(--purple); font-style:italic;">SideKiq</em> for your task.</h1>
+        <p class="lead">Post your project, get matched with vetted professionals, and pay only when you're happy. Takes 3 minutes.</p>
+        <button class="btn btn-primary btn-lg" id="startBtn">Get started</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 1. SIGN IN ============ -->
+  <section class="panel" data-step="signin">
+    <div class="card">
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 11l5-3-5-3M21 8H10M14 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8"/></svg>
+      </div>
+      <span class="step-eyebrow">Step 1 of 8</span>
+      <h2>Sign in to continue</h2>
+      <p class="lead">Use the same account you'll manage tasks with.</p>
+
+      <div class="choice-card" data-auth="google" tabindex="0">
+        <span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 12h-7.5"/></svg></span>
+        <span class="cc-text"><strong>Continue with Google</strong><span>Use your Google account</span></span>
+        <span class="cc-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span>
+      </div>
+
+      <div class="choice-card" data-auth="email" tabindex="0">
+        <span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 6.5l8 6 8-6"/></svg></span>
+        <span class="cc-text"><strong>Continue with Email</strong><span>We'll send a link to sign in</span></span>
+        <span class="cc-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span>
+      </div>
+      <div class="inline-reveal" id="emailReveal">
+        <div class="field"><input type="email" id="emailInput" placeholder="you@company.com"></div>
+      </div>
+
+      <div class="choice-card" data-auth="phone" tabindex="0">
+        <span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>
+        <span class="cc-text"><strong>Continue with Phone</strong><span>We'll text you a one-time code</span></span>
+        <span class="cc-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span>
+      </div>
+      <div class="inline-reveal" id="phoneReveal">
+        <div class="field"><input type="tel" id="phoneInput" placeholder="+1 (555) 000-0000"></div>
+      </div>
+
+      <p class="hint" id="signinHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Choose a sign-in method to continue.</p>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-back>Back</button>
+        <button class="btn btn-primary" data-next>Continue</button>
+      </div>
+
+      <p style="text-align:center; margin-top:18px;">
+        <button class="skip-link" id="skipAuthBtn" type="button">Skip for now — sign-in isn't connected yet</button>
+      </p>
+
+      <p style="font-size:.78rem; margin-top:20px; color:var(--text-soft); text-align:center;">By continuing, you agree to SideKiq's Terms and Privacy Policy.</p>
+    </div>
+  </section>
+
+  <!-- ============ 2. COMPANY ============ -->
+  <section class="panel" data-step="company">
+    <div class="card">
+      <div class="step-icon is-orange">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M10 3v18M14 3v18"/></svg>
+      </div>
+      <span class="step-eyebrow">Step 2 of 8</span>
+      <h2>Tell us about your company</h2>
+      <p class="lead">This helps us tailor matches to your industry and size.</p>
+
+      <div class="field">
+        <label for="companyName">Company name</label>
+        <input type="text" id="companyName" placeholder="e.g. Acme Corp">
+      </div>
+
+      <div class="field">
+        <label for="companyWebsite">Website (optional)</label>
+        <input type="url" id="companyWebsite" placeholder="https://">
+      </div>
+
+      <div class="field">
+        <label for="companyIndustry">Industry</label>
+        <select id="companyIndustry">
+          <option value="">Select your industry</option>
+          <option value="Tech">Technology / Software</option>
+          <option value="Design">Design / Creative</option>
+          <option value="Marketing">Marketing / Advertising</option>
+          <option value="Finance">Finance / Accounting</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Education">Education</option>
+          <option value="Retail">Retail / E-commerce</option>
+          <option value="Manufacturing">Manufacturing</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="companySize">Company size</label>
+        <select id="companySize">
+          <option value="">Select size</option>
+          <option value="1-10">1–10 employees</option>
+          <option value="11-50">11–50 employees</option>
+          <option value="51-200">51–200 employees</option>
+          <option value="201-1000">201–1000 employees</option>
+          <option value="1000+">1000+ employees</option>
+        </select>
+      </div>
+
+      <p class="hint" id="companyHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Please fill in your company name and industry.</p>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-back>Back</button>
+        <button class="btn btn-primary" data-next>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. NEEDS ============ -->
+  <section class="panel" data-step="needs">
+    <div class="card">
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </div>
+      <span class="step-eyebrow">Step 3 of 8</span>
+      <h2>What skills do you need?</h2>
+      <p class="lead">Select the categories you'll typically hire for.</p>
+
+      <div class="cat-select-grid" id="categoryGrid"></div>
+
+      <p class="hint" id="needsHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Select at least one category.</p>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-back>Back</button>
+        <button class="btn btn-primary" data-next>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. BUDGET ============ -->
+  <section class="panel" data-step="budget">
+    <div class="card">
+      <div class="step-icon is-orange">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 4v2M12 18v2M16 8l-4 4-4-4"/><path d="M8 16l4-4 4 4"/></svg>
+      </div>
+      <span class="step-eyebrow">Step 4 of 8</span>
+      <h2>What's your typical budget?</h2>
+      <p class="lead">We'll use this to recommend SideKiqs that fit your price range.</p>
+
+      <div class="field">
+        <label>Average task budget</label>
+        <div class="chip-group" id="budgetGroup">
+          <button class="chip" data-budget="Under $100">Under $100</button>
+          <button class="chip" data-budget="$100–$500">$100–$500</button>
+          <button class="chip" data-budget="$500–$2,000">$500–$2,000</button>
+          <button class="chip" data-budget="$2,000+">$2,000+</button>
+          <button class="chip" data-budget="Flexible">Flexible</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Payment method preferred</label>
+        <div class="chip-group" id="paymentGroup">
+          <button class="chip" data-payment="Credit card">Credit card</button>
+          <button class="chip" data-payment="Bank transfer">Bank transfer</button>
+          <button class="chip" data-payment="PayPal">PayPal</button>
+          <button class="chip" data-payment="Cryptocurrency">Cryptocurrency</button>
+        </div>
+      </div>
+
+      <p class="hint" id="budgetHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Select a budget range to continue.</p>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-back>Back</button>
+        <button class="btn btn-primary" data-next>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. PREFERENCES ============ -->
+  <section class="panel" data-step="preferences">
+    <div class="card">
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 4-2 5-2 6h16c0-1-2-2-2-6Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+      </div>
+      <span class="step-eyebrow">Step 5 of 8</span>
+      <h2>How should we reach you?</h2>
+      <p class="lead">Manage notifications and communication preferences.</p>
+
+      <div class="switch-row">
+        <div class="sr-text"><strong>Email notifications</strong><span>Task updates, matches, and receipts</span></div>
+        <div class="switch on" data-key="email"><span class="sw-thumb"></span></div>
+      </div>
+      <div class="switch-row">
+        <div class="sr-text"><strong>SMS alerts</strong><span>Urgent task updates and reminders</span></div>
+        <div class="switch" data-key="sms"><span class="sw-thumb"></span></div>
+      </div>
+      <div class="switch-row">
+        <div class="sr-text"><strong>Push notifications</strong><span>Real-time messages and offers</span></div>
+        <div class="switch on" data-key="push"><span class="sw-thumb"></span></div>
+      </div>
+      <div class="switch-row">
+        <div class="sr-text"><strong>Weekly digest</strong><span>Summary of new SideKiqs and trends</span></div>
+        <div class="switch on" data-key="digest"><span class="sw-thumb"></span></div>
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-back>Back</button>
+        <button class="btn btn-primary" data-next>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. VERIFICATION ============ -->
+  <section class="panel" data-step="verification">
+    <div class="card">
+      <div class="step-icon is-orange">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3 7.5-7 9-4-1.5-7-4-7-9V6z"/><path d="M9.5 12l1.8 1.8L14.5 10"/></svg>
+      </div>
+      <span class="step-eyebrow">Step 6 of 8</span>
+      <h2>Verify your account</h2>
+      <p class="lead">Helps us ensure you're a real business and builds trust with SideKiqs.</p>
+
+      <div class="verify-card">
+        <span class="vc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 6.5l8 6 8-6"/></svg></span>
+        <span class="vc-text"><strong>Email address</strong><span id="verifyEmailLabel">Confirm the email you signed in with</span></span>
+        <span class="status-badge pending" id="emailBadge">Pending</span>
+      </div>
+      <div class="verify-inline" id="emailVerifyInline">
+        <div class="row">
+          <input type="text" placeholder="Enter the 6-digit code" id="emailCode">
+          <button class="btn btn-primary btn-sm" id="emailConfirm" style="padding:11px 18px;">Confirm</button>
+        </div>
+      </div>
+      <div style="text-align:right; margin-top:-10px; margin-bottom:14px;">
+        <button class="btn btn-ghost btn-sm" id="emailVerifyBtn" style="padding:8px 16px; font-size:.82rem;">Send code</button>
+      </div>
+
+      <div class="verify-card">
+        <span class="vc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>
+        <span class="vc-text"><strong>Phone number</strong><span>For task alerts and account recovery</span></span>
+        <span class="status-badge pending" id="phoneBadge">Pending</span>
+      </div>
+      <div class="verify-inline" id="phoneVerifyInline">
+        <div class="row">
+          <input type="text" placeholder="Enter the 6-digit code" id="phoneCode">
+          <button class="btn btn-primary btn-sm" id="phoneConfirm" style="padding:11px 18px;">Confirm</button>
+        </div>
+      </div>
+      <div style="text-align:right; margin-top:-10px; margin-bottom:14px;">
+        <button class="btn btn-ghost btn-sm" id="phoneVerifyBtn" style="padding:8px 16px; font-size:.82rem;">Send code</button>
+      </div>
+
+      <p class="hint" id="verifyHint" style="margin-top:18px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Verify your email and phone to finish.</p>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-back>Back</button>
+        <button class="btn btn-primary" data-next>Finish setup</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. SUCCESS ============ -->
+  <section class="panel" data-step="success">
+    <div class="cover">
+      <div class="cover-inner">
+        <div class="cover-badge" id="successBadge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path class="draw-check" d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </div>
+        <h1>You're ready to post tasks!</h1>
+        <p class="lead">Your account is set up. Start finding the perfect SideKiq for your next project.</p>
+
+        <div class="summary-card">
+          <div class="summary-row">
+            <div class="summary-avatar" id="summaryAvatar">C</div>
+            <div>
+              <strong id="summaryName">—</strong>
+              <span id="summaryIndustry">—</span>
+            </div>
+          </div>
+          <div class="summary-chips" id="summaryChips"></div>
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" id="dashboardBtn">Go to dashboard</button>
+        <button class="btn btn-ghost" id="editBtn" style="margin-top:12px;">Edit profile</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  /* ===================== Data ===================== */
+  var CATEGORIES = [
+    { id:'Coding', label:'Coding', icon:'<path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/>' },
+    { id:'UI/UX', label:'UI/UX', icon:'<rect x="3" y="3" width="11" height="11" rx="2"/><rect x="10" y="10" width="11" height="11" rx="2"/>' },
+    { id:'Video Editing', label:'Video Editing', icon:'<circle cx="12" cy="12" r="9"/><path d="M10 9l5 3-5 3z"/>' },
+    { id:'Robotics', label:'Robotics', icon:'<circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><circle cx="12" cy="6" r="2"/><path d="M6 16L12 8M18 16L12 8M6 18h12"/>' },
+    { id:'Design', label:'Design', icon:'<path d="M16 3l5 5-11 11H5v-5z"/><path d="M14 5l5 5"/>' },
+    { id:'AI', label:'AI', icon:'<path d="M12 3l1.8 4.4L18 9l-4.2 1.6L12 15l-1.8-4.4L6 9l4.2-1.6z"/><path d="M19 15l.9 2.2L22 18l-2.1.8L19 21l-.9-2.2L16 18l2.1-.8z"/>' },
+    { id:'CAD', label:'CAD', icon:'<path d="M12 3l8 4v10l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/>' }
+  ];
+
+  /* ===================== State ===================== */
+  var STEPS = ['welcome','signin','company','needs','budget','preferences','verification','success'];
+  var STEP_NAMES = { signin:'Sign in', company:'Company', needs:'Skills needed', budget:'Budget', preferences:'Preferences', verification:'Verification' };
+  var current = 0;
+
+  var state = {
+    authMethod:null, email:'', phone:'',
+    companyName:'', website:'', industry:'', size:'',
+    categories:[],
+    budget:null, payment:null,
+    notif:{ email:true, sms:false, push:true, digest:true },
+    verify:{ email:false, phone:false }
+  };
+
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ===================== Helpers ===================== */
+  function $(sel, root){ return (root||document).querySelector(sel); }
+  function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+  function checkIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>'; }
+
+  /* ===================== Theme toggle ===================== */
+  var root = document.documentElement;
+  $('#themeToggle').addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+  });
+
+  /* ===================== Navigation ===================== */
+  var panels = {};
+  $all('.panel').forEach(function(p){ panels[p.getAttribute('data-step')] = p; });
+
+  function render(){
+    var stepId = STEPS[current];
+    $all('.panel').forEach(function(p){ p.classList.remove('active'); });
+    panels[stepId].classList.add('active');
+
+    var flowNav = $('#flowNav');
+    var progressWrap = $('#progressWrap');
+    var isCover = (stepId === 'welcome' || stepId === 'success');
+    progressWrap.style.display = isCover ? 'none' : 'block';
+    flowNav.classList.toggle('is-cover', isCover);
+
+    if (!isCover){
+      var mainIndex = current; // signin=1 ... verification=6
+      $('#progressFill').style.width = (mainIndex / 7 * 100) + '%';
+      $('#progressLabel').textContent = mainIndex + '/7';
+      $('#stepName').textContent = STEP_NAMES[stepId] || '';
+      $('#backBtn').disabled = false;
+    }
+
+    if (stepId === 'needs') buildCategoryGrid();
+    if (stepId === 'verification') prefillVerification();
+    if (stepId === 'success') buildSuccess();
+
+    window.scrollTo({ top:0, behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  function goNext(){
+    if (!validateStep(STEPS[current])) return;
+    if (current < STEPS.length - 1){ current++; render(); }
+  }
+  function goBack(){
+    if (current > 0){ current--; render(); }
+  }
+
+  $('#backBtn').addEventListener('click', goBack);
+  $('#startBtn').addEventListener('click', goNext);
+  $all('[data-next]').forEach(function(b){ b.addEventListener('click', goNext); });
+  $all('[data-back]').forEach(function(b){ b.addEventListener('click', goBack); });
+
+  function showHint(id, show){ var el = $('#'+id); if(el) el.classList.toggle('show', !!show); }
+
+  function validateStep(stepId){
+    if (stepId === 'signin'){
+      var ok = !!state.authMethod && (state.authMethod === 'google' || (state.authMethod === 'email' && state.email) || (state.authMethod === 'phone' && state.phone));
+      showHint('signinHint', !ok);
+      return ok;
+    }
+    if (stepId === 'company'){
+      var ok2 = state.companyName.trim().length > 0 && state.industry;
+      showHint('companyHint', !ok2);
+      return ok2;
+    }
+    if (stepId === 'needs'){
+      var ok3 = state.categories.length > 0;
+      showHint('needsHint', !ok3);
+      return ok3;
+    }
+    if (stepId === 'budget'){
+      var ok4 = !!state.budget;
+      showHint('budgetHint', !ok4);
+      return ok4;
+    }
+    return true;
+  }
+
+  /* ===================== 1. Sign in ===================== */
+  $all('.choice-card[data-auth]').forEach(function(card){
+    card.addEventListener('click', function(){
+      $all('.choice-card[data-auth]').forEach(function(c){ c.classList.remove('selected'); });
+      card.classList.add('selected');
+      state.authMethod = card.getAttribute('data-auth');
+      $('#emailReveal').classList.toggle('show', state.authMethod === 'email');
+      $('#phoneReveal').classList.toggle('show', state.authMethod === 'phone');
+      showHint('signinHint', false);
+      if (state.authMethod === 'email') $('#emailInput').focus();
+      if (state.authMethod === 'phone') $('#phoneInput').focus();
+    });
+  });
+  $('#emailInput').addEventListener('input', function(e){ state.email = e.target.value; });
+  $('#phoneInput').addEventListener('input', function(e){ state.phone = e.target.value; });
+  $('#skipAuthBtn').addEventListener('click', function(){
+    if (!state.authMethod) state.authMethod = 'skipped';
+    if (current < STEPS.length - 1){ current++; render(); }
+  });
+
+  /* ===================== 2. Company ===================== */
+  $('#companyName').addEventListener('input', function(e){ state.companyName = e.target.value; });
+  $('#companyWebsite').addEventListener('input', function(e){ state.website = e.target.value; });
+  $('#companyIndustry').addEventListener('change', function(e){ state.industry = e.target.value; });
+  $('#companySize').addEventListener('change', function(e){ state.size = e.target.value; });
+
+  /* ===================== 3. Needs ===================== */
+  function buildCategoryGrid(){
+    var grid = $('#categoryGrid');
+    grid.innerHTML = CATEGORIES.map(function(c){
+      var sel = state.categories.indexOf(c.id) > -1 ? 'selected' : '';
+      return '<div class="cat-select '+sel+'" data-cat="'+c.id+'">' +
+        '<span class="cs-check">'+checkIcon()+'</span>' +
+        '<span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+c.icon+'</svg></span>' +
+        '<span>'+c.label+'</span></div>';
+    }).join('');
+    $all('.cat-select', grid).forEach(function(el){
+      el.addEventListener('click', function(){
+        var id = el.getAttribute('data-cat');
+        el.classList.toggle('selected');
+        if (el.classList.contains('selected')){
+          state.categories.push(id);
+        } else {
+          state.categories = state.categories.filter(function(c){ return c !== id; });
+        }
+        showHint('needsHint', false);
+      });
+    });
+  }
+
+  /* ===================== 4. Budget ===================== */
+  $all('#budgetGroup .chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      $all('#budgetGroup .chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      state.budget = chip.getAttribute('data-budget');
+      showHint('budgetHint', false);
+    });
+  });
+  $all('#paymentGroup .chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      $all('#paymentGroup .chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      state.payment = chip.getAttribute('data-payment');
+    });
+  });
+
+  /* ===================== 5. Preferences ===================== */
+  $all('.switch').forEach(function(sw){
+    sw.addEventListener('click', function(){
+      sw.classList.toggle('on');
+      state.notif[sw.getAttribute('data-key')] = sw.classList.contains('on');
+    });
+  });
+
+  /* ===================== 6. Verification ===================== */
+  function prefillVerification(){
+    if (state.authMethod === 'email' && state.email){
+      $('#verifyEmailLabel').textContent = state.email;
+    } else if (state.email) {
+      $('#verifyEmailLabel').textContent = state.email;
+    }
+  }
+  function setupVerify(sendBtnId, inlineId, confirmId, key, badgeId){
+    $(sendBtnId).addEventListener('click', function(){
+      $(inlineId).classList.add('show');
+      $(sendBtnId).textContent = 'Resend code';
+    });
+    $(confirmId).addEventListener('click', function(){
+      state.verify[key] = true;
+      $(inlineId).classList.remove('show');
+      var badge = $(badgeId);
+      badge.classList.remove('pending'); badge.classList.add('verified');
+      badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>Verified';
+      showHint('verifyHint', false);
+    });
+  }
+  setupVerify('#emailVerifyBtn', '#emailVerifyInline', '#emailConfirm', 'email', '#emailBadge');
+  setupVerify('#phoneVerifyBtn', '#phoneVerifyInline', '#phoneConfirm', 'phone', '#phoneBadge');
+
+  /* ===================== 7. Success ===================== */
+  function buildSuccess(){
+    var name = state.companyName || 'Your company';
+    $('#summaryName').textContent = name;
+    $('#summaryIndustry').textContent = state.industry || 'Industry not set';
+    var avatar = $('#summaryAvatar');
+    var initials = name.trim().split(' ').map(function(n){ return n[0]; }).join('').slice(0,2).toUpperCase();
+    avatar.textContent = initials || 'C';
+    $('#summaryChips').innerHTML = state.categories.map(function(c){ return '<span class="summary-chip">'+c+'</span>'; }).join('');
+
+    if (!reduceMotion){
+      requestAnimationFrame(function(){
+        setTimeout(function(){ $('#successBadge').classList.add('in-view'); }, 150);
+      });
+    } else {
+      $('#successBadge').classList.add('in-view');
+    }
+  }
+
+  $('#dashboardBtn').addEventListener('click', function(){
+    alert('This would take you to your client dashboard.');
+  });
+  $('#editBtn').addEventListener('click', function(){
+    current = 2; render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
